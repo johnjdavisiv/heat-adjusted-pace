@@ -7,8 +7,90 @@ const tempModParams = {
 // (this is the coarse version, use fine for production)
 
 
+// Heat index grid (different!) -- uses "NOAA 2014" scheme for heat index calculations
+
+const heatIndexModParams = {
+  "heat_index_noaa_2014": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45],
+  "logspeed_adjust": [-0.0043, -0.0037, -0.003, -0.0024, -0.0018, -0.0012, -0.0007, -0.0003, -0.0001, 0, -0.0002, -0.0006, -0.0013, -0.0022, -0.0035, -0.0049, -0.0066, -0.0084, -0.0104, -0.0124, -0.0146, -0.0167, -0.0189, -0.0211, -0.0234, -0.0257, -0.028, -0.0305, -0.033, -0.0355, -0.0382, -0.0409, -0.0437, -0.0466, -0.0496, -0.0526, -0.0556, -0.0587, -0.0618, -0.0649, -0.068, -0.0711, -0.0742, -0.0773, -0.0804, -0.0835]
+}
+
+
+
 // Note this is more of a classic lookup table, like expand.grid() in R
 // Will want to do an interpolation strategy
+
+// "Simple" linear interpolation
+function create1DInterpolationLookup(dataObject, opts = {}) {
+  // Extract options with defaults
+  const { 
+    extrapolate = false,
+    xKey = 'heat_index_noaa_2014', 
+    yKey = 'logspeed_adjust' 
+  } = opts;
+  
+  // Extract and validate the data arrays
+  const xValues = dataObject[xKey];
+  const yValues = dataObject[yKey];
+  
+  if (!xValues || !yValues) {
+    throw new Error(`Missing required keys: ${xKey} or ${yKey}`);
+  }
+  
+  if (xValues.length !== yValues.length) {
+    throw new Error('X and Y arrays must have the same length');
+  }
+  
+  if (xValues.length < 2) {
+    throw new Error('Need at least 2 data points for interpolation');
+  }
+  
+  // Return the lookup function with extrapolation setting baked in
+  return function lookup(x) {
+    const minX = xValues[0];
+    const maxX = xValues[xValues.length - 1];
+    
+    // Check bounds if extrapolation is not allowed
+    if (!extrapolate) {
+      if (x < minX || x > maxX) {
+        throw new Error(`Value ${x} is out of bounds [${minX}, ${maxX}]. Enable extrapolation in options to extrapolate.`);
+      }
+    }
+    
+    // Find the two points to interpolate between
+    let i = 0;
+    
+    // Handle exact matches and find interpolation interval
+    for (i = 0; i < xValues.length; i++) {
+      if (x === xValues[i]) {
+        return yValues[i]; // Exact match
+      }
+      if (x < xValues[i]) {
+        break;
+      }
+    }
+    
+    // Handle edge cases for extrapolation
+    if (i === 0) {
+      // Extrapolate using first two points
+      i = 1;
+    } else if (i === xValues.length) {
+      // Extrapolate using last two points
+      i = xValues.length - 1;
+    }
+    
+    // Get the two points for interpolation
+    const x1 = xValues[i - 1];
+    const x2 = xValues[i];
+    const y1 = yValues[i - 1];
+    const y2 = yValues[i];
+    
+    // Linear interpolation formula: y = y1 + (x - x1) * (y2 - y1) / (x2 - x1)
+    const interpolatedValue = y1 + (x - x1) * (y2 - y1) / (x2 - x1);
+    
+    return interpolatedValue;
+  };
+}
+
 
 /**
  * Bilinear interpolator over a rectilinear grid with renamed columns.
@@ -92,17 +174,112 @@ function createLogspeedAdjustInterpolator(table, opts = {}) {
   };
 }
 
-// --- Example ---
-const table = {
-  air_temp_c:     [0,10,20, 0,10,20, 0,10,20],
-  humidity_pct:   [20,20,20, 50,50,50, 80,80,80],
-  logspeed_adjust:[-0.1,0.0,0.1, -0.05,0.05,0.15, -0.02,0.08,0.2]
-};
 
-const logspeed_lookup = createLogspeedAdjustInterpolator(table, { extrapolate: true });
-console.log(logspeed_lookup(12.5, 65)); // interpolated logspeed_adjust at 12.5°C, 65% RH
+// Testing
+
+console.log('Testing real table')
+const heatHumidityLookup = createLogspeedAdjustInterpolator(tempModParams, { extrapolate: true });
+console.log(heatHumidityLookup(8, 0)); // real tests
 
 
 
 
+// Create lookup function WITH extrapolation
+const heatIndexLookup = create1DInterpolationLookup(heatIndexModParams, { extrapolate: true });
+console.log(heatIndexLookup(25.5)); // Works - within bounds  
+console.log(heatIndexLookup(50));   // Works - extrapolates beyond 45
+console.log(heatIndexLookup(-5));   // Works - extrapolates below 0
 
+console.log(heatIndexLookup(8));   // Works - extrapolates below 0
+
+
+// Actual scripts 
+
+
+
+
+
+// ----- Reading speed from digits
+function readCurrentSpeed(){
+  // Pace mode
+  if (pace_or_speed == "pace") {
+      // read mm:ss
+      var minute_val = parseInt(d1.textContent)
+      var sec_val = 10*parseInt(d2.textContent) + parseInt(d3.textContent)
+      var dec_minutes = minute_val + sec_val/60
+
+      const pace_units = document.querySelector('#pace-units').textContent
+
+      if (pace_units == "/mi"){
+          //Convert to m/s
+          input_m_s = 1609.344/(60*dec_minutes)
+      } else if (pace_units == "/km"){
+          //Convert to m/s
+          input_m_s = 1000/(60*dec_minutes)
+      }
+
+  // Speed mode
+  } else if (pace_or_speed == "speed") {
+      const speed_units = document.querySelector('#speed-units').textContent
+      //speed changes
+      var dec_speed = parseInt(s1.textContent) + parseInt(s2.textContent)/10
+
+          if (speed_units == "mph"){
+          //Convert to m/s
+          input_m_s = dec_speed*1609.344/3600
+      } else if (speed_units == "km/h"){
+          //Convert to m/s
+          input_m_s = dec_speed*1000/3600
+      } else if (speed_units == "m/s"){
+          input_m_s = dec_speed // lol
+      }
+  }
+}
+
+function decimal_pace_to_string(pace_decimal){
+    let pace_min = Math.floor(pace_decimal)
+    //Could be zero!! 
+    let pace_sec = (pace_decimal - pace_min)*60
+    //e.g. 9.50 --> 30 
+
+    //Deal with e.g. 3:59.9 --> 4:00.0
+    if (Math.round(pace_sec) === 60) {
+        pace_sec = 0
+        pace_min = pace_min+1;
+    } else {
+        pace_sec = Math.round(pace_sec);
+    }
+    //To formatted string
+    res = `${pace_min}:${pace_sec.toString().padStart(2,'0')}` 
+    return res
+}
+
+
+/// m/s output to string
+let conv_dec 
+
+const convert_dict = {
+    // functions to convert m/s to [output unit, as key]
+    '/mi':function (m_s){
+        // to decimal minutes per mile
+        conv_dec = 1609.344/(m_s*60)
+        return decimal_pace_to_string(conv_dec);
+    },
+    '/km':function (m_s){
+        // to decimal minutes per km
+        conv_dec = 1000/(m_s*60)
+        return decimal_pace_to_string(conv_dec);
+    },
+    'mph':function (m_s){
+        conv_dec = m_s*2.23694
+        return conv_dec.toFixed(1);
+    },
+    'km/h':function (m_s){
+        conv_dec = m_s*3.6
+        return conv_dec.toFixed(1);
+    },
+    'm/s':function (m_s){
+        // ez mode lol
+        return m_s.toFixed(2);
+    }
+}
