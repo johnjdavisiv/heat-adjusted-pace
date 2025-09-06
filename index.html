@@ -179,6 +179,16 @@
                 <button class="temp-toggle active" id="temp-f">Fahrenheit</button>
                 <button class="temp-toggle" id="temp-c">Celsius </button>
             </div>
+            <div class="alert-box hidden" id="humidity-alert">
+                <div class="alert-inner">
+                    <span class='alert-text'>⚠️ Humidity &le;25% is very rare! Output may be incorrect</span>
+                </div>
+            </div>
+            <div class="alert-box hidden" id="low-temp-alert">
+                <div class="alert-inner">
+                    <span class='alert-text'>⚠️ Temperatures below freezing are rare in the dataset! Output may be incorrect</span>
+                </div>
+            </div>
             <div class="spacer effort-container">
                 <span id="result-pre">is the same effort as</span>
             </div>

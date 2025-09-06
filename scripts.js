@@ -41,6 +41,7 @@ let inner_dewpoint_c = tempFtoC(INITIAL_DEWPOINT_F)
 // hmmm need to update these...
 
 
+
 // "Load" parameters for the heat/humidity 
 const tempModParams = {
   "air_temp_c": [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45],
@@ -845,7 +846,8 @@ let dewpoint_units = document.querySelector("#dewpoint-units") // C or F
 let dewpoint_value = parseFloat(dewpoint_text.textContent)
 
 
-
+let humidity_alert = document.querySelector("#humidity-alert")
+let lowtemp_alert = document.querySelector('#low-temp-alert')
 
 
 function readWeatherConditions(){
@@ -864,6 +866,17 @@ function readWeatherConditions(){
     inner_humidity_pct = calculateRelativeHumidity(inner_temp_c, inner_dewpoint_c);
   } else {
     inner_humidity_pct = humidity_value // maybe not necessary but will avoid any weird bugs
+  }
+
+  if (inner_humidity_pct <= 25) {
+    humidity_alert.classList.remove('hidden')
+  } else {
+    humidity_alert.classList.add('hidden')
+  }
+    if (inner_temp_c <= 0 || inner_heat_index_c <= 0) {
+    lowtemp_alert.classList.remove('hidden')
+  } else {
+    lowtemp_alert.classList.add('hidden')
   }
 }
 
@@ -1021,3 +1034,6 @@ function increment_dewpoint(change){
   }
   updateResult();
 }
+
+
+updateResult();
