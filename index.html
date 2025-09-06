@@ -37,159 +37,161 @@
     </header>
     <main>
         <h1>Pace adjustments for heat and humidity</h1>
-        <div class="pace-box">
-            <div class="left-dummy"></div>
-            <div class="clock" id="pace-dials">
-                <div class="digitbox">
-                    <button class="material-icons svg-arrow" id="d1-up">expand_less</button>
-                    <div class="digit" id="d1">7</div>
-                    <button class="material-icons svg-arrow" id="d1-down">expand_more</button>
+        <div class="app-box">            
+            <div class="pace-box">
+                <div class="left-dummy"></div>
+                <div class="clock" id="pace-dials">
+                    <div class="digitbox">
+                        <button class="material-icons svg-arrow" id="d1-up">expand_less</button>
+                        <div class="digit" id="d1">7</div>
+                        <button class="material-icons svg-arrow" id="d1-down">expand_more</button>
+                    </div>
+                    <div class="digitbox colon">
+                        <span class="digit">:</span>
+                    </div>
+                    <div class="digitbox">
+                        <button class="material-icons svg-arrow" id="d2-up">expand_less</button>
+                        <div class="digit" id="d2">0</div>
+                        <button class="material-icons svg-arrow" id="d2-down">expand_more</button>
+                    </div>
+                    <div class="digitbox">
+                        <button class="material-icons svg-arrow" id="d3-up">expand_less</button>
+                        <div class="digit" id="d3">0</div>
+                        <button class="material-icons svg-arrow" id="d3-down">expand_more</button>
+                    </div>
+                    <div class="unit-text" id="pace-units">/mi</div>
                 </div>
-                <div class="digitbox colon">
-                    <span class="digit">:</span>
+                <div class="clock hidden" id="speed-dials">
+                    <div class="digitbox">
+                        <button class="material-icons svg-arrow" id="s1-up">expand_less</button>
+                        <div class="digit" id="s1">6</div>
+                        <button class="material-icons svg-arrow" id="s1-down">expand_more</button>
+                    </div>
+                    <div class="digitbox colon">
+                        <span class="digit">.</span>
+                    </div>
+                    <div class="digitbox">
+                        <button class="material-icons svg-arrow" id="s2-up">expand_less</button>
+                        <div class="digit" id="s2">0</div>
+                        <button class="material-icons svg-arrow" id="s2-down">expand_more</button>
+                    </div>
+                    <div class="unit-text" id="speed-units">mph</div>
                 </div>
-                <div class="digitbox">
-                    <button class="material-icons svg-arrow" id="d2-up">expand_less</button>
-                    <div class="digit" id="d2">0</div>
-                    <button class="material-icons svg-arrow" id="d2-down">expand_more</button>
+                <div class="unit-stack">
+                    <button class="unit-toggle pace-toggle active" id="mi-pace">/mi</button>
+                    <button class="unit-toggle pace-toggle" id="km-pace">/km</button>
+                    <button class="unit-toggle pace-toggle" id="mph-speed">mph</button>
+                    <button class="unit-toggle pace-toggle" id="kmh-speed">km/h</button>
+                    <button class="unit-toggle pace-toggle" id="kmh-speed">m/s</button>
                 </div>
-                <div class="digitbox">
-                    <button class="material-icons svg-arrow" id="d3-up">expand_less</button>
-                    <div class="digit" id="d3">0</div>
-                    <button class="material-icons svg-arrow" id="d3-down">expand_more</button>
+            </div>
+            <div class="spacer toggle-box" id="pace-post">
+                <a href="#effort-vs-pace" class="i-note">?</a>
+                <div>
+                    <span id="pace-or-effort">pace</span><span>&nbsp;in</span>
                 </div>
-                <div class="unit-text" id="pace-units">/mi</div>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider round"></span>
+                </label>
             </div>
-            <div class="clock hidden" id="speed-dials">
-                <div class="digitbox">
-                    <button class="material-icons svg-arrow" id="s1-up">expand_less</button>
-                    <div class="digit" id="s1">6</div>
-                    <button class="material-icons svg-arrow" id="s1-down">expand_more</button>
+            <!-- Heat/humidity input -->
+            <div class="arrow-container" id="heat-index-input">
+                <div class="arrow-box">
+                    <button class="material-icons pct-button" id="heat-index-m5" title="-5">keyboard_double_arrow_left</button>
+                    <button class="material-icons pct-button" id="heat-index-m1" title="-1">keyboard_arrow_left</button>
                 </div>
-                <div class="digitbox colon">
-                    <span class="digit">.</span>
+                <div class="wind-text">
+                    <span class="wind-digits" id="heat-index-digit">75</span>
+                    <span class="wind-label">&deg;&nbsp;</span>
+                    <span class="wind-label" id="heat-index-units">F</span>
+                    <span class="wind-label">&nbsp;</span>
+                    <span class="wind-label">heat index</span>
                 </div>
-                <div class="digitbox">
-                    <button class="material-icons svg-arrow" id="s2-up">expand_less</button>
-                    <div class="digit" id="s2">0</div>
-                    <button class="material-icons svg-arrow" id="s2-down">expand_more</button>
+                <div class="arrow-box">
+                    <button class="material-icons pct-button" id="heat-index-p1" title="+1">keyboard_arrow_right</button>
+                    <button class="material-icons pct-button" id="heat-index-p5" title="+5">keyboard_double_arrow_right</button>
                 </div>
-                <div class="unit-text" id="speed-units">mph</div>
             </div>
-            <div class="unit-stack">
-                <button class="unit-toggle pace-toggle active" id="mi-pace">/mi</button>
-                <button class="unit-toggle pace-toggle" id="km-pace">/km</button>
-                <button class="unit-toggle pace-toggle" id="mph-speed">mph</button>
-                <button class="unit-toggle pace-toggle" id="kmh-speed">km/h</button>
-                <button class="unit-toggle pace-toggle" id="kmh-speed">m/s</button>
+            <!-- Temperature -->
+            <div class="arrow-container" id="temperature-input">
+                <div class="arrow-box">
+                    <button class="material-icons pct-button" id="temperature-m5" title="-5">keyboard_double_arrow_left</button>
+                    <button class="material-icons pct-button" id="temperature-m1" title="-1">keyboard_arrow_left</button>
+                </div>
+                <div class="wind-text">
+                    <span class="wind-digits" id="temperature-digit">75</span>
+                    <span class="wind-label">&deg;&nbsp;</span>
+                    <span class="wind-label" id="temperature-units">F</span>
+                    <span class="wind-label">&nbsp;</span>
+                    <span class="wind-label">temperature</span>
+                </div>
+                <div class="arrow-box">
+                    <button class="material-icons pct-button" id="temperature-p1" title="+1">keyboard_arrow_right</button>
+                    <button class="material-icons pct-button" id="temperature-p5" title="+5">keyboard_double_arrow_right</button>
+                </div>
             </div>
-        </div>
-        <div class="spacer toggle-box" id="pace-post">
-            <a href="#effort-vs-pace" class="i-note">?</a>
-            <div>
-                <span id="pace-or-effort">pace</span><span>&nbsp;in</span>
+            <!-- "and" only shows up when using humidity mode or dew point mode -->
+            <div class="spacer narrow-spacer" id="and-box">
+                <span>and</span>
             </div>
-            <label class="switch">
-                <input type="checkbox" checked>
-                <span class="slider round"></span>
-            </label>
-        </div>
-        <!-- Heat/humidity input -->
-        <div class="arrow-container" id="heat-index-input">
-            <div class="arrow-box">
-                <button class="material-icons pct-button" id="heat-index-m5" title="-5">keyboard_double_arrow_left</button>
-                <button class="material-icons pct-button" id="heat-index-m1" title="-1">keyboard_arrow_left</button>
+            <!-- Humidity selector (un-hidden when mode selected) -->
+            <div class="arrow-container" id="humidity-input">
+                <div class="arrow-box">
+                    <button class="material-icons pct-button" id="humidity-m5" title="-5">keyboard_double_arrow_left</button>
+                    <button class="material-icons pct-button" id="humidity-m1" title="-1">keyboard_arrow_left</button>
+                </div>
+                <div class="wind-text">
+                    <span class="wind-digits" id="humidity-digit">50</span>
+                    <span class="wind-label">%&nbsp;</span>
+                    <span class="wind-label">humidity</span>
+                </div>
+                <div class="arrow-box">
+                    <button class="material-icons pct-button" id="humidity-p1" title="+1">keyboard_arrow_right</button>
+                    <button class="material-icons pct-button" id="humidity-p5" title="+5">keyboard_double_arrow_right</button>
+                </div>
             </div>
-            <div class="wind-text">
-                <span class="wind-digits" id="heat-index-digit">75</span>
-                <span class="wind-label">&deg;&nbsp;</span>
-                <span class="wind-label" id="heat-index-units">F</span>
-                <span class="wind-label">&nbsp;</span>
-                <span class="wind-label">heat index</span>
+            <!-- Dew point selector (un-hidden when mode selected) -->
+            <div class="arrow-container" id="dewpoint-input">
+                <div class="arrow-box">
+                    <button class="material-icons pct-button" id="dewpoint-m5" title="-5">keyboard_double_arrow_left</button>
+                    <button class="material-icons pct-button" id="dewpoint-m1" title="-1">keyboard_arrow_left</button>
+                </div>
+                <div class="wind-text">
+                    <span class="wind-digits" id="dewpoint-digit">60</span>
+                    <span class="wind-label">&deg;&nbsp;</span>
+                    <span class="wind-label" id="dewpoint-units">F</span>
+                    <span class="wind-label">&nbsp;</span>
+                    <span class="wind-label">dew point</span>
+                </div>
+                <div class="arrow-box">
+                    <button class="material-icons pct-button" id="dewpoint-p1" title="+1">keyboard_arrow_right</button>
+                    <button class="material-icons pct-button" id="dewpoint-p5" title="+5">keyboard_double_arrow_right</button>
+                </div>
             </div>
-            <div class="arrow-box">
-                <button class="material-icons pct-button" id="heat-index-p1" title="+1">keyboard_arrow_right</button>
-                <button class="material-icons pct-button" id="heat-index-p5" title="+5">keyboard_double_arrow_right</button>
+            <div class="unit-stack-horiz wind-unit-select">
+                <button class="heat-toggle active" id="mode-heat-index">heat index</button>
+                <button class="heat-toggle" id="mode-humidity">humidity</button>
+                <button class="heat-toggle" id="mode-dewpoint">dew point</button>
             </div>
-        </div>
-        <!-- Temperature -->
-        <div class="arrow-container" id="temp-input">
-            <div class="arrow-box">
-                <button class="material-icons pct-button" id="temperature-m5" title="-5">keyboard_double_arrow_left</button>
-                <button class="material-icons pct-button" id="temperature-m1" title="-1">keyboard_arrow_left</button>
+            <div class="unit-stack-horiz wind-unit-select">
+                <button class="temp-toggle active" id="temp-f">Fahrenheit</button>
+                <button class="temp-toggle" id="temp-c">Celsius </button>
             </div>
-            <div class="wind-text">
-                <span class="wind-digits" id="temperature-digit">75</span>
-                <span class="wind-label">&deg;&nbsp;</span>
-                <span class="wind-label" id="temperature-units">F</span>
-                <span class="wind-label">&nbsp;</span>
-                <span class="wind-label">temperature</span>
+            <div class="spacer effort-container">
+                <span id="result-pre">is the same effort as</span>
             </div>
-            <div class="arrow-box">
-                <button class="material-icons pct-button" id="temperature-p1" title="+1">keyboard_arrow_right</button>
-                <button class="material-icons pct-button" id="temperature-p5" title="+5">keyboard_double_arrow_right</button>
+            <div class="pace-result-box">
+                <div class="left-dummy"></div>
+                <div class="pace-result-text">
+                    <span class="pace-result" id="output-text">7:21</span>
+                    <span class="convert-units" id="output-units">/mi</span>
+                </div>
+                <div class="left-dummy"></div>
             </div>
-        </div>
-        <!-- "and" only shows up when using humidity mode or dew point mode -->
-        <div class="spacer narrow-spacer" id="and-box">
-            <span>and</span>
-        </div>
-        <!-- Humidity selector (un-hidden when mode selected) -->
-        <div class="arrow-container" id="humid-input">
-            <div class="arrow-box">
-                <button class="material-icons pct-button" id="humidity-m5" title="-5">keyboard_double_arrow_left</button>
-                <button class="material-icons pct-button" id="humidity-m1" title="-1">keyboard_arrow_left</button>
+            <div class="spacer">
+                <span id="result-post">in ideal conditions</span>
             </div>
-            <div class="wind-text">
-                <span class="wind-digits" id="humidity-digit">50</span>
-                <span class="wind-label">%&nbsp;</span>
-                <span class="wind-label">humidity</span>
-            </div>
-            <div class="arrow-box">
-                <button class="material-icons pct-button" id="humidity-p1" title="+1">keyboard_arrow_right</button>
-                <button class="material-icons pct-button" id="humidity-p5" title="+5">keyboard_double_arrow_right</button>
-            </div>
-        </div>
-        <!-- Dew point selector (un-hidden when mode selected) -->
-        <div class="arrow-container" id="dewpoint-input">
-            <div class="arrow-box">
-                <button class="material-icons pct-button" id="dewpoint-m5" title="-5">keyboard_double_arrow_left</button>
-                <button class="material-icons pct-button" id="dewpoint-m1" title="-1">keyboard_arrow_left</button>
-            </div>
-            <div class="wind-text">
-                <span class="wind-digits" id="wind-digit">60</span>
-                <span class="wind-label">&deg;&nbsp;</span>
-                <span class="wind-label" id="temp-units">F</span>
-                <span class="wind-label">&nbsp;</span>
-                <span class="wind-label" id="wind-type">dew point</span>
-            </div>
-            <div class="arrow-box">
-                <button class="material-icons pct-button" id="dewpoint-p1" title="+1">keyboard_arrow_right</button>
-                <button class="material-icons pct-button" id="dewpoint-p5" title="+5">keyboard_double_arrow_right</button>
-            </div>
-        </div>
-        <div class="unit-stack-horiz wind-unit-select">
-            <button class="temp-toggle active">heat index</button>
-            <button class="temp-toggle">humidity</button>
-            <button class="temp-toggle">dew point</button>
-        </div>
-        <div class="unit-stack-horiz wind-unit-select">
-            <button class="temp-toggle active">Fahrenheit</button>
-            <button class="temp-toggle">Celsius </button>
-        </div>
-        <div class="spacer effort-container">
-            <span id="result-pre">is the same effort as</span>
-        </div>
-        <div class="pace-result-box">
-            <div class="left-dummy"></div>
-            <div class="pace-result-text">
-                <span class="pace-result" id="output-text">7:21</span>
-                <span class="convert-units" id="output-units">/mi</span>
-            </div>
-            <div class="left-dummy"></div>
-        </div>
-        <div class="spacer">
-            <span id="result-pre">in ideal conditions</span>
         </div>
         <div class="explainer-text">
             <h2 id="how-to-use">How to use<a class="material-icons up" href="#top">arrow_upward</a></h2>

@@ -167,8 +167,7 @@ main {
     max-width: var(--width-limit);
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    
+    align-items: center;    
 }
 
 
@@ -324,7 +323,7 @@ main {
     border-radius:5px;
 }
 
-.unit-toggle, .hill-toggle, .temp-toggle{
+.unit-toggle, .hill-toggle, .temp-toggle, .heat-toggle{
     background-color: var(--toggle-color);
     border: none;
     border-radius:5px;

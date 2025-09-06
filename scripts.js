@@ -1,3 +1,33 @@
+// John J Davis, RunningWritings.com
+
+
+const RUNNER_SPEED_DEFAULT = 3.83176 // 7:00/mi
+const DEFAULT_OUTPUT_SPEED_M_S = 3.915669 // fix later once you do calcs
+
+
+const TEMP_MAX_VALUE_F = 120
+const TEMP_MIN_VALUE_F = 10
+
+const TEMP_MIN_VALUE_C = -10
+const TEMP_MAX_VALUE_C = 48
+
+const HUMIDITY_MIN_VALUE = 0
+const HUMIDITY_MAX_VALUE = 100 //duh
+
+const DEW_POINT_MIN_VALUE = -40
+// no max value because it's dependent on the temperature!
+// i.e. max dew point = current temp
+
+
+let output_speed_ms = DEFAULT_OUTPUT_SPEED_M_S
+let input_m_s = RUNNER_SPEED_DEFAULT // just read it first time from pace dials
+let pace_or_speed = "pace"
+let units_mode = "usa"
+let effort_mode = false
+
+let temperature_mode = "F"
+let heat_mode = "heat-index"
+
 // "Load" parameters for the heat/humidity 
 const tempModParams = {
   "air_temp_c": [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45],
@@ -282,4 +312,562 @@ const convert_dict = {
         // ez mode lol
         return m_s.toFixed(2);
     }
+}
+
+
+
+// Updates, etc
+
+
+function updateResult(){
+  console.log('UPDATED RESULT')
+  //doHeatCalcs()
+  //updateOutput()
+}
+
+
+// Effort vs pace toggle switch
+// Attach the event listener to the checkbox input
+let effortToggle = document.querySelector('#pace-post .switch input[type="checkbox"]');
+effortToggle.addEventListener('change', function() {
+  let effortText = document.getElementById("pace-or-effort")
+  let resultPreText = document.getElementById('result-pre')
+  let resultPostText = document.getElementById('result-post')
+
+  // if checkbox is checked, we are in EFFORT MODE - consdider swaping>?
+  if (effortToggle.checked){
+    effort_mode = false;
+    effortText.innerHTML = "pace"
+    resultPreText.innerText = "is the same effort as"
+    resultPostText.innerText = "in ideal conditions"
+  } else {
+    effort_mode = true;
+    effortText.innerHTML = "effort"
+    resultPreText.innerText = "will result in"
+    resultPostText.innerText = "in the heat"
+  }
+  updateResult()
+})
+
+
+
+
+// Dials for input pace
+// Dial and input controls
+// --- Incrementing pace dials --- 
+
+//First incrementor
+let d1 = document.querySelector("#d1");
+const d1_up = document.querySelector('#d1-up');
+const d1_down = document.querySelector('#d1-down');
+
+d1_up.addEventListener('click', () => {
+    increment_minutes(d1,1);
+    updateResult();
+});
+
+d1_down.addEventListener('click', () => {
+    increment_minutes(d1,-1);
+    updateResult();
+});
+
+//Second incrementors - a bit different
+const d2_up = document.querySelector('#d2-up');
+const d2_down = document.querySelector('#d2-down');
+
+d2_up.addEventListener('click', () => {
+    increment_sec_digit(d2,6,1);
+    updateResult();
+});
+
+d2_down.addEventListener('click', () => {
+    increment_sec_digit(d2,6,-1);
+    updateResult();
+});
+
+// 3rd digit is limit 10
+const d3_up = document.querySelector('#d3-up');
+const d3_down = document.querySelector('#d3-down');
+
+d3_up.addEventListener('click', () => {
+    increment_sec_digit(d3,10,1);
+    updateResult();
+});
+
+d3_down.addEventListener('click', () => {
+    increment_sec_digit(d3,10,-1,5); //floor of 5
+    updateResult();
+});
+
+
+// incremntor functions
+function increment_sec_digit(digit_object, digit_limit, change){
+    let digit_val = parseInt(digit_object.textContent);
+    // mod ops to circularize
+    if (change === 1) {
+        digit_val = (digit_val + 1) % digit_limit;
+    }
+    if (change === -1) {
+        digit_val = (digit_val - 1 + digit_limit) % digit_limit;
+    }
+    // DEAL WITH 0:00 SOMEHOW...
+    digit_object.textContent = digit_val;
+}
+
+function increment_minutes(digit_object,change){
+    let digit_val = parseInt(digit_object.textContent);
+    //Disallow > 60
+    if (change > 0 && digit_val < 60) {
+        digit_object.textContent = digit_val + change
+    }
+    //Disallow < 0
+    if (digit_val > 0 && change < 0) {
+        digit_object.textContent = digit_val + change
+    }
+}
+
+// --- icnrementing speed
+
+//First incrementor
+let s1 = document.querySelector("#s1");
+const s1_up = document.querySelector('#s1-up');
+const s1_down = document.querySelector('#s1-down');
+
+s1_up.addEventListener('click', () => {
+    increment_minutes(s1,1);
+    updateResult();
+});
+
+s1_down.addEventListener('click', () => {
+    increment_minutes(s1,-1);
+    updateResult();
+});
+
+//Second incrementors - a bit different
+const s2_up = document.querySelector('#s2-up');
+const s2_down = document.querySelector('#s2-down');
+
+s2_up.addEventListener('click', () => {
+    increment_sec_digit(s2,10,1);
+    updateResult();
+});
+
+s2_down.addEventListener('click', () => {
+    increment_sec_digit(s2,10,-1);
+    updateResult();
+});
+
+
+// Unit selection
+
+
+// Input unit selector
+const pace_buttons = document.querySelectorAll('.pace-toggle');
+
+pace_buttons.forEach(button => {
+    button.addEventListener('click', (e) => {
+        // Remove active class from all buttons
+        pace_buttons.forEach(btn => btn.classList.remove('active'));
+        // Toggle the active state of the clicked button
+        e.target.classList.toggle('active');
+        setPaceText(button);
+    });
+});
+
+// Output unit selector
+const output_buttons = document.querySelectorAll('.wind-toggle');
+
+output_buttons.forEach(button => {
+    button.addEventListener('click', (e) => {
+        // Remove active class from all buttons
+        output_buttons.forEach(btn => btn.classList.remove('active'));
+        // Toggle the active state of the clicked button
+        e.target.classList.toggle('active');
+        setWindUnits(button);
+        //setOutputText(button);
+        updateResult();
+    });
+});
+
+
+const speed_dials = document.querySelector('#speed-dials')
+const pace_dials = document.querySelector('#pace-dials')
+
+function setMode(dial_mode) {
+    if (dial_mode == "pace") {
+        // set global var, swap hidden states
+        pace_or_speed = "pace"
+        speed_dials.classList.add('hidden');
+        pace_dials.classList.remove('hidden');
+
+    }
+    if (dial_mode == "speed") {
+        // set global var, swap hidden states
+        pace_or_speed = "speed"
+        pace_dials.classList.add('hidden');
+        speed_dials.classList.remove('hidden');
+
+    }
+}
+
+
+//Change display text by pace
+function setPaceText(button){
+    //4 things can happen here: mi, km, mph, kmh.
+    let pace_units = document.querySelector('#pace-units')
+    let speed_units = document.querySelector('#speed-units')
+
+    // [/mi] 
+    if (button.textContent == "/mi" || button.textContent == "/km") {
+        setMode("pace");        
+        pace_units.textContent = button.textContent;
+        // function like pass_pace_to_speed()
+    }
+    if (button.textContent == "mph" || button.textContent == "km/h" || button.textContent == "m/s") {
+        setMode("speed");
+        speed_units.textContent = button.textContent;
+        // function like pass_speed_to_pace() 
+    }
+
+    setOutputText(button)
+
+    updateResult();
+}
+
+var output_text = document.querySelector('#output-text')
+// Use this to change otuput text directly
+
+//easy once you get inoptu as m/s and output as m/s
+
+// Make output match input
+function setOutputText(button){
+    let output_units = document.querySelector('#output-units')
+    // [/mi] 
+    output_units.textContent = button.textContent;
+}
+
+
+// C vs F toggle
+
+
+/** Convert Fahrenheit to Celsius, respecting limits */
+function tempFtoC(f) {
+  let proposed_c = (f - 32)*5/9;
+  if (proposed_c < TEMP_MIN_VALUE_C){
+    proposed_c = TEMP_MIN_VALUE_C
+  }
+
+  if (proposed_c > TEMP_MAX_VALUE_C){
+    proposed_c = TEMP_MAX_VALUE_C
+  }
+  return proposed_c;
+}
+
+/** Convert Celsius to Fahrenheit */
+function tempCtoF(c) {
+  let proposed_f = (c * 9 / 5) + 32;
+  if (proposed_f < TEMP_MIN_VALUE_F) {
+    proposed_f = TEMP_MIN_VALUE_F;
+  }
+  if (proposed_f > TEMP_MAX_VALUE_F) {
+    proposed_f = TEMP_MAX_VALUE_F;
+  }
+  return proposed_f;
+}
+
+
+// Heat mode
+
+const heat_mode_buttons = document.querySelectorAll('.heat-toggle');
+
+heat_mode_buttons.forEach(button => {
+    button.addEventListener('click', (e) => {
+        // Remove active class from all buttons
+        heat_mode_buttons.forEach(btn => btn.classList.remove('active'));
+        // Toggle the active state of the clicked button
+        e.currentTarget.classList.toggle('active');
+        setHeatMode(button);
+        updateResult();
+    });
+});
+
+
+const heat_index_box = document.querySelector('#heat-index-input')
+const temperature_box = document.querySelector('#temperature-input')
+const humidity_box = document.querySelector('#humidity-input')
+const dewpoint_box = document.querySelector('#dewpoint-input')
+const and_box = document.querySelector('#and-box')
+
+function setHeatMode(button){
+  if (button.id == "mode-heat-index"){
+    // In heat index mode, heat index is the only box we have
+    heat_index_box.classList.remove('hidden')
+    temperature_box.classList.add('hidden')
+    humidity_box.classList.add('hidden')
+    dewpoint_box.classList.add('hidden')
+    and_box.classList.add('hidden')
+
+  } else if (button.id == "mode-humidity") {
+    // In humidity mode we need air temp and humidity pct
+    heat_index_box.classList.add('hidden')
+    temperature_box.classList.remove('hidden')
+    humidity_box.classList.remove('hidden')
+    dewpoint_box.classList.add('hidden')
+    and_box.classList.remove('hidden')
+  } else if (button.id == "mode-dewpoint") {
+    // In dewpoint mode we need air temp and dewpoint
+    heat_index_box.classList.add('hidden')
+    temperature_box.classList.remove('hidden')
+    humidity_box.classList.add('hidden')
+    dewpoint_box.classList.remove('hidden')
+    and_box.classList.remove('hidden')
+  } 
+}
+
+
+
+const temp_mode_buttons = document.querySelectorAll('.temp-toggle');
+
+temp_mode_buttons.forEach(button => {
+    button.addEventListener('click', (e) => {
+        // Remove active class from all buttons
+        temp_mode_buttons.forEach(btn => btn.classList.remove('active'));
+        // Toggle the active state of the clicked button
+        e.currentTarget.classList.toggle('active');
+        setTempMode(button);
+        updateResult();
+    });
+});
+
+
+function setTempMode(button){
+  // Useful in case I need to tweak standards
+  if (button.id == "temp-f") {
+    // Only switch if a switch is needed!
+    if (temperature_mode == "C") {
+      switchTemps("F")      
+    }
+    temperature_mode = "F"
+  } else if (button.id == "temp-c") {
+    if (temperature_mode == "F") {
+      switchTemps("C");
+    }
+    temperature_mode = "C"
+  }
+  switchTemps();
+}
+
+
+
+
+function switchTemps(switch_to_what){
+  if (switch_to_what == "F"){
+    temperature_units.textContent = "F"
+    dewpoint_units.textContent = "F"
+    heat_index_units.textContent = "F"
+
+    heat_index_value = tempCtoF(heat_index_value)
+    temperature_value = tempCtoF(temperature_value)
+    dewpoint_value = tempCtoF(dewpoint_value)
+
+    // Added dewpoint fix
+    if (dewpoint_value > temperature_value){
+      dewpoint_value = temperature_value
+    }
+    
+  } else if (switch_to_what == "C"){
+    temperature_units.textContent = "C"
+    dewpoint_units.textContent = "C"
+    heat_index_units.textContent = "C"
+    heat_index_value = tempFtoC(heat_index_value)
+    temperature_value = tempFtoC(temperature_value)
+    dewpoint_value = tempFtoC(dewpoint_value)
+
+    if (dewpoint_value > temperature_value){
+      dewpoint_value = temperature_value
+    }
+  }
+
+  //Must update the actual display text too
+  heat_index_text.textContent = heat_index_value.toFixed(0)
+  temperature_text.textContent = temperature_value.toFixed(0)
+  dewpoint_text.textContent = dewpoint_value.toFixed(0)
+}   
+
+// Query Select our Temp / Humidty/ etc values
+
+// Heat index control
+let heat_index_text = document.querySelector("#heat-index-digit")
+let heat_index_units = document.querySelector("#heat-index-units") // C or F
+let heat_index_value = parseFloat(heat_index_text.textContent)
+
+// Air temp
+let temperature_text = document.querySelector("#temperature-digit")
+let temperature_units = document.querySelector("#temperature-units") // C or F
+let temperature_value = parseFloat(temperature_text.textContent)
+
+// Humidity
+let humidity_text = document.querySelector("#humidity-digit")
+let humidity_units = document.querySelector("#humidity-units") // C or F
+let humidity_value = parseFloat(humidity_text.textContent)
+
+
+// Dew point
+let dewpoint_text = document.querySelector("#dewpoint-digit")
+let dewpoint_units = document.querySelector("#dewpoint-units") // C or F
+let dewpoint_value = parseFloat(dewpoint_text.textContent)
+
+
+
+
+// Heat index buttons
+// In order left to right...
+const heat_index_m5 = document.querySelector("#heat-index-m5")
+heat_index_m5.addEventListener('click', () => {
+    increment_heat_index(-5) // I think we can set upt his function for humidity too?
+})
+const heat_index_m1 = document.querySelector("#heat-index-m1")
+heat_index_m1.addEventListener('click', () => {
+  increment_heat_index(-1)
+})
+const heat_index_p1 = document.querySelector("#heat-index-p1")
+heat_index_p1.addEventListener('click', () => {
+  increment_heat_index(1)
+})
+const heat_index_p5 = document.querySelector("#heat-index-p5")
+heat_index_p5.addEventListener('click', () => {
+  increment_heat_index(5)
+})
+
+// Temperature buttons
+const temperature_m5 = document.querySelector("#temperature-m5")
+temperature_m5.addEventListener('click', () => {
+    increment_temperature(-5) // I think we can set upt his function for humidity too?
+})
+const temperature_m1 = document.querySelector("#temperature-m1")
+temperature_m1.addEventListener('click', () => {
+  increment_temperature(-1)
+})
+const temperature_p1 = document.querySelector("#temperature-p1")
+temperature_p1.addEventListener('click', () => {
+  increment_temperature(1)
+})
+const temperature_p5 = document.querySelector("#temperature-p5")
+temperature_p5.addEventListener('click', () => {
+  increment_temperature(5)
+})
+
+// Humidity buttons
+const humidity_m5 = document.querySelector("#humidity-m5")
+humidity_m5.addEventListener('click', () => {
+    increment_humidity(-5) // I think we can set up this function for humidity too?
+})
+const humidity_m1 = document.querySelector("#humidity-m1")
+humidity_m1.addEventListener('click', () => {
+  increment_humidity(-1)
+})
+const humidity_p1 = document.querySelector("#humidity-p1")
+humidity_p1.addEventListener('click', () => {
+  increment_humidity(1)
+})
+const humidity_p5 = document.querySelector("#humidity-p5")
+humidity_p5.addEventListener('click', () => {
+  increment_humidity(5)
+})
+
+
+// Dewpoint buttons
+const dewpoint_m5 = document.querySelector("#dewpoint-m5")
+dewpoint_m5.addEventListener('click', () => {
+  increment_dewpoint(-5) // we can set up this function for dewpoint too
+})
+const dewpoint_m1 = document.querySelector("#dewpoint-m1")
+dewpoint_m1.addEventListener('click', () => {
+  increment_dewpoint(-1)
+})
+const dewpoint_p1 = document.querySelector("#dewpoint-p1")
+dewpoint_p1.addEventListener('click', () => {
+  increment_dewpoint(1)
+})
+const dewpoint_p5 = document.querySelector("#dewpoint-p5")
+dewpoint_p5.addEventListener('click', () => {
+  increment_dewpoint(5)
+})
+
+
+
+
+
+// Maybe easuest to do separately for each,, slightly non DRY but simpler
+
+function increment_heat_index(change){
+  let proposed_val = heat_index_value + change
+  // UGH need to ifelse the units
+  if (temperature_mode == "F"){
+    if (proposed_val <= TEMP_MAX_VALUE_F && proposed_val >= TEMP_MIN_VALUE_F) {
+      //change is allowed
+      heat_index_value = proposed_val
+      heat_index_text.textContent = heat_index_value.toFixed(0)
+    }
+  }
+  if (temperature_mode == "C"){
+    if (proposed_val <= TEMP_MAX_VALUE_C && proposed_val >= TEMP_MIN_VALUE_C) {
+      //change is allowed
+      heat_index_value = proposed_val
+      heat_index_text.textContent = heat_index_value.toFixed(0)
+    }
+  }
+  updateResult();
+}
+
+// also need to police dewpoints here
+function increment_temperature(change){
+  let proposed_val = temperature_value + change
+  // UGH need to ifelse the units
+  if (temperature_mode == "F"){
+    if (proposed_val <= TEMP_MAX_VALUE_F && proposed_val >= TEMP_MIN_VALUE_F) {
+      //change is allowed
+      temperature_value = proposed_val
+      temperature_text.textContent = temperature_value.toFixed(0)
+    }
+  }
+  if (temperature_mode == "C"){
+    if (proposed_val <= TEMP_MAX_VALUE_C && proposed_val >= TEMP_MIN_VALUE_C) {
+      //change is allowed
+      temperature_value = proposed_val
+      temperature_text.textContent = temperature_value.toFixed(0)
+    }
+  }
+
+  // need to enforce dewpoints
+  if (dewpoint_value > temperature_value) {
+    dewpoint_value = temperature_value
+    dewpoint_text.textContent = dewpoint_value.toFixed(0)
+  }
+
+  updateResult();
+}
+
+
+function increment_humidity(change){
+  let proposed_val = humidity_value + change
+  // UGH need to ifelse the units
+if (proposed_val <= HUMIDITY_MAX_VALUE && proposed_val >= HUMIDITY_MIN_VALUE) {
+      //change is allowed
+      humidity_value = proposed_val
+      humidity_text.textContent = humidity_value.toFixed(0)
+    }
+  updateResult();
+}
+
+
+function increment_dewpoint(change){
+  let proposed_val = dewpoint_value + change
+  // No need to ifelse the units, BUT note we are dynamically using temperature value to set ceiling!
+if (proposed_val <= temperature_value && proposed_val >= DEW_POINT_MIN_VALUE) {
+      //change is allowed
+      dewpoint_value = proposed_val
+      dewpoint_text.textContent = dewpoint_value.toFixed(0)
+    }
+  updateResult();
 }
