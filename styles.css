@@ -355,6 +355,16 @@ main {
     user-select: none; /* Standard */
 }
 
+
+.bq-text {
+    margin: 0em 1em;
+    padding: 1em;
+    background-color: #eaf6ff;
+    border-left: 5px solid var(--hover-color); /* Adds a solid line on the left */
+    font-style: italic; /* Optionally, italicize the text to further mimic a blockquote */
+    border-radius: 5px 10px 10px 5px;
+}
+
 .metric-toggle{
     font-size:1em;
 }
