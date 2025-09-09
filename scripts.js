@@ -291,7 +291,7 @@ function doHeatAdjustment(){
   
   let logspeed_adjustment
   let log_result 
-
+  
   if (heat_mode == "heat-index"){
     logspeed_adjustment = heatIndexLookup(inner_heat_index_c);
   } else {
@@ -299,7 +299,7 @@ function doHeatAdjustment(){
     // (b/c getWeather already takes care of dewpoint --> humidity adjustment)
     logspeed_adjustment = heatHumidityLookup(inner_temp_c, inner_humidity_pct);
   }
-
+  
   if (effort_mode){
     log_result = input_log_speed + logspeed_adjustment
   } else if (!effort_mode){
@@ -307,12 +307,12 @@ function doHeatAdjustment(){
     log_result = input_log_speed - logspeed_adjustment
   }
   output_speed_ms = Math.exp(log_result) // back transform to m/s
-
+  
   // Now, if in pace mode (effort_mode = false), we need to SUBTRACT the adjustment!
   //b/c real;ly bad heat is like return value -0.05 from lookup for heat index (about negative 5% hit to speed)
   // EFFORT MODEL: cool weather, you **add** a negative number to input(logged), makes speed go down --> SLOWER
   // PACE MODE: you **subract** off the performance hit you are experiencing, minus a negative nmber makes logspeed go up --> faster
-
+  
 }
 
 
@@ -437,16 +437,16 @@ function updateOutput(){
   let out_text = document.querySelector('#output-text')
   let out_units = document.querySelector('#output-units')
   let convert_text = ''
-
+  
   if (!Number.isFinite(output_speed_ms) || input_m_s == 0){
-      // If we get any funny business...hmm
-      convert_text = '🤔' // hmm or scream
+    // If we get any funny business...hmm
+    convert_text = '🤔' // hmm or scream
   } else {
-      const convert_fxn = convert_dict[out_units.textContent]
-      convert_text = convert_fxn(output_speed_ms)
+    const convert_fxn = convert_dict[out_units.textContent]
+    convert_text = convert_fxn(output_speed_ms)
   }
   out_text.textContent = convert_text
-
+  
   //Update text in doc
 }
 
@@ -849,7 +849,7 @@ let dewpoint_value = parseFloat(dewpoint_text.textContent)
 
 let humidity_alert = document.querySelector("#humidity-alert")
 let lowtemp_alert = document.querySelector('#low-temp-alert')
-
+let hightemp_alert = document.querySelector('#high-temp-alert')
 
 function readWeatherConditions(){
   if (temperature_mode == "F"){
@@ -868,16 +868,22 @@ function readWeatherConditions(){
   } else {
     inner_humidity_pct = humidity_value // maybe not necessary but will avoid any weird bugs
   }
-
+  
   if (inner_humidity_pct <= 25) {
     humidity_alert.classList.remove('hidden')
   } else {
     humidity_alert.classList.add('hidden')
   }
-    if (inner_temp_c <= 0 || inner_heat_index_c <= 0) {
+  if (inner_temp_c <= 0 || inner_heat_index_c <= 0) {
     lowtemp_alert.classList.remove('hidden')
   } else {
     lowtemp_alert.classList.add('hidden')
+  }
+  
+  if (inner_temp_c >= 32 || inner_heat_index_c >= 32) {
+    hightemp_alert.classList.remove('hidden')
+  } else {
+    hightemp_alert.classList.add('hidden')
   }
 }
 
