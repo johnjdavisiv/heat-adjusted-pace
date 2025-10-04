@@ -1,3 +1,5 @@
+
+
 library(tidyverse)
 library(readxl)
 library(mgcv)
@@ -318,7 +320,6 @@ df_mar %>% glimpse()
 k_temp <- 4
 k_humid <- 5
 
-temp_knots <- c(0, 10, 20, 30)  # Temperature knots in Celsius
 humidity_knots <- c(0, 20, 40, 60, 80)  # Humidity knots in percent
 
 te_mod_mar <- bam(log_speed ~ 1                              # Average marathon speed
@@ -334,6 +335,10 @@ te_mod_mar <- bam(log_speed ~ 1                              # Average marathon 
                data = df_mar, method = "fREML")
 
 summary(te_mod_mar)
+
+te_mod_mar$residuals %>% sd()
+
+saveRDS(te_mod_mar, file = "marathon_heat_humidity_te_model.rds")
 
 
 gratia::draw(te_mod_mar, dist=0.3, n_contour = 16)

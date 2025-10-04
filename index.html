@@ -19,9 +19,9 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="styles.css?v=1.0.6">
-    <script src="scripts.js?v=1.0.4" defer></script>
-    <script defer data-domain="apps.runningwritings.com" src="https://plausible.io/js/script.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles.css?v=1.0.7">
+    <script src="scripts.js?v=1.0.5" defer></script>
+    <script defer data-domain="apps.runningwritings.com" src="https://plausible.io/js/script.tagged-events.js"></script>
 </head>
 <body>
     <header>
@@ -35,6 +35,14 @@
             </nav>
         </div>
     </header>
+    <div class="mee-banner hello-bar--aqua-drift hidden">
+        <div class="banner-left"><button id="mee-banner-close">x</button></div>
+        <div class="banner-middle">
+            <span class="banner-text-full">Learn how to acclimate to the heat in my new book: <a href="https://marathonexcellence.com/?utm_source=rw_apps&utm_medium=hellobar&utm_campaign=pace_hello_bar" class="hello-link plausible-event-name=Banner+MEE+Click">Marathon Excellence</a></span>
+            <span class="banner-text-short">Train for the heat with my new book: <a href="https://marathonexcellence.com/?utm_source=rw_apps&utm_medium=hellobar&utm_campaign=pace_hello_bar" class="hello-link plausible-event-name=Banner+MEE+Click">Marathon Excellence</a></span>
+        </div>
+        <div class="banner-right"><a href="https://marathonexcellence.com/?utm_source=rw_apps&utm_medium=hellobar&utm_campaign=pace_hello_bar" class="cta-button plausible-event-name=Banner+MEE+Click">Learn More</a></div>
+    </div>
     <main>
         <h1>Pace adjustments for heat and humidity</h1>
         <div class="app-box">            
@@ -96,7 +104,7 @@
                 </label>
             </div>
             <!-- Heat/humidity input -->
-            <div class="arrow-container" id="heat-index-input">
+            <div class="arrow-container hidden" id="heat-index-input">
                 <div class="arrow-box">
                     <button class="material-icons pct-button" id="heat-index-m5" title="-5">keyboard_double_arrow_left</button>
                     <button class="material-icons pct-button" id="heat-index-m1" title="-1">keyboard_arrow_left</button>
@@ -114,7 +122,7 @@
                 </div>
             </div>
             <!-- Temperature -->
-            <div class="arrow-container hidden" id="temperature-input">
+            <div class="arrow-container" id="temperature-input">
                 <div class="arrow-box">
                     <button class="material-icons pct-button" id="temperature-m5" title="-5">keyboard_double_arrow_left</button>
                     <button class="material-icons pct-button" id="temperature-m1" title="-1">keyboard_arrow_left</button>
@@ -132,11 +140,11 @@
                 </div>
             </div>
             <!-- "and" only shows up when using humidity mode or dew point mode -->
-            <div class="spacer narrow-spacer hidden" id="and-box">
+            <div class="spacer narrow-spacer" id="and-box">
                 <span>and</span>
             </div>
             <!-- Humidity selector (un-hidden when mode selected) -->
-            <div class="arrow-container hidden" id="humidity-input">
+            <div class="arrow-container" id="humidity-input">
                 <div class="arrow-box">
                     <button class="material-icons pct-button" id="humidity-m5" title="-5">keyboard_double_arrow_left</button>
                     <button class="material-icons pct-button" id="humidity-m1" title="-1">keyboard_arrow_left</button>
@@ -171,8 +179,8 @@
             </div>
             <div class="unit-stack-horiz wind-unit-select">
                 
-                <button class="heat-toggle active" id="mode-heat-index">heat index</button>
-                <button class="heat-toggle" id="mode-humidity">humidity</button>
+                <button class="heat-toggle" id="mode-heat-index">heat index</button>
+                <button class="heat-toggle active" id="mode-humidity">humidity</button>
                 <button class="heat-toggle" id="mode-dewpoint">dew point</button>
             </div>
             <div class="unit-stack-horiz wind-unit-select">
@@ -216,9 +224,6 @@
         </div>
         <div class="explainer-text">
             <hr class="separator-thick">
-            <div class="newsletter-block">
-                <script async src="https://eomail6.com/form/187bb3d4-92e9-11ed-8dcb-9536633250ee.js" data-form="187bb3d4-92e9-11ed-8dcb-9536633250ee"></script>
-            </div>
             <h2 id="how-to-use">How to use<a class="material-icons up" href="#top">arrow_upward</a></h2>
             <p>This app calculates pace adjustments for running long workouts and races in hot and humid conditions. You can input the local weather as a heat index, temperature + relative humidity, or temperature + dew point.</p>
             <p>The heat-adjusted paces come from a statistical model fit to data from 3,891 marathon runners across 754 different races, though the pace adjustments are also a good estimate for any long continuous effort, even if it&rsquo;s not a marathon race.</p>
