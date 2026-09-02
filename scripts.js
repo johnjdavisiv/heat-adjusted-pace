@@ -8,8 +8,8 @@ const DEFAULT_OUTPUT_SPEED_M_S = 3.915669 // fix later once you do calcs
 const TEMP_MAX_VALUE_F = 120
 const TEMP_MIN_VALUE_F = 10
 
-const TEMP_MIN_VALUE_C = -10
-const TEMP_MAX_VALUE_C = 48
+const TEMP_MIN_VALUE_C = -12
+const TEMP_MAX_VALUE_C = 49
 
 const HUMIDITY_MIN_VALUE = 0
 const HUMIDITY_MAX_VALUE = 100 //duh
@@ -28,7 +28,6 @@ const INITIAL_HUMIDITY = 50
 let output_speed_ms = DEFAULT_OUTPUT_SPEED_M_S
 let input_m_s = RUNNER_SPEED_DEFAULT // just read it first time from pace dials
 let pace_or_speed = "pace"
-let units_mode = "usa"
 let effort_mode = false
 
 let temperature_mode = "F"
@@ -255,18 +254,10 @@ function createLogspeedAdjustInterpolator(table, opts = {}) {
 // Testing
 
 const heatHumidityLookup = createLogspeedAdjustInterpolator(tempModParams, { extrapolate: true });
-console.log(heatHumidityLookup(8, 0)); // real tests
 
 
 // Create lookup function WITH extrapolation
 const heatIndexLookup = create1DInterpolationLookup(heatIndexModParams, { extrapolate: true });
-
-
-console.log(heatIndexLookup(25.5)); // Works - within bounds  
-console.log(heatIndexLookup(50));   // Works - extrapolates beyond 45
-console.log(heatIndexLookup(-5));   // Works - extrapolates below 0
-
-console.log(heatIndexLookup(8));   // Works - extrapolates below 0
 
 
 // Actual scripts 
@@ -382,32 +373,31 @@ function decimal_pace_to_string(pace_decimal){
     pace_sec = Math.round(pace_sec);
   }
   //To formatted string
-  res = `${pace_min}:${pace_sec.toString().padStart(2,'0')}` 
+  const res = `${pace_min}:${pace_sec.toString().padStart(2,'0')}` 
   return res
 }
 
 
 /// m/s output to string
-let conv_dec 
 
 const convert_dict = {
   // functions to convert m/s to [output unit, as key]
   '/mi':function (m_s){
     // to decimal minutes per mile
-    conv_dec = 1609.344/(m_s*60)
+    const conv_dec = 1609.344/(m_s*60)
     return decimal_pace_to_string(conv_dec);
   },
   '/km':function (m_s){
     // to decimal minutes per km
-    conv_dec = 1000/(m_s*60)
+    const conv_dec = 1000/(m_s*60)
     return decimal_pace_to_string(conv_dec);
   },
   'mph':function (m_s){
-    conv_dec = m_s*2.23694
+    const conv_dec = m_s*2.23694
     return conv_dec.toFixed(1);
   },
   'km/h':function (m_s){
-    conv_dec = m_s*3.6
+    const conv_dec = m_s*3.6
     return conv_dec.toFixed(1);
   },
   'm/s':function (m_s){
@@ -426,10 +416,6 @@ function updateResult(){
   readWeatherConditions()
   doHeatAdjustment()
   updateOutput()
-  console.log('INPUT SPEED')
-  console.log(input_m_s)
-  console.log('OUTPUT SPEED')
-  console.log(output_speed_ms)
 }
 
 
@@ -484,6 +470,8 @@ effortToggle.addEventListener('change', function() {
 
 //First incrementor
 let d1 = document.querySelector("#d1");
+const d2 = document.querySelector("#d2");
+const d3 = document.querySelector("#d3");
 const d1_up = document.querySelector('#d1-up');
 const d1_down = document.querySelector('#d1-down');
 
@@ -521,7 +509,7 @@ d3_up.addEventListener('click', () => {
 });
 
 d3_down.addEventListener('click', () => {
-  increment_sec_digit(d3,10,-1,5); //floor of 5
+  increment_sec_digit(d3,10,-1);
   updateResult();
 });
 
@@ -556,6 +544,7 @@ function increment_minutes(digit_object,change){
 
 //First incrementor
 let s1 = document.querySelector("#s1");
+const s2 = document.querySelector("#s2");
 const s1_up = document.querySelector('#s1-up');
 const s1_down = document.querySelector('#s1-down');
 
@@ -599,22 +588,6 @@ pace_buttons.forEach(button => {
     setPaceText(button);
   });
 });
-
-// Output unit selector
-const output_buttons = document.querySelectorAll('.wind-toggle');
-
-output_buttons.forEach(button => {
-  button.addEventListener('click', (e) => {
-    // Remove active class from all buttons
-    output_buttons.forEach(btn => btn.classList.remove('active'));
-    // Toggle the active state of the clicked button
-    e.target.classList.toggle('active');
-    setWindUnits(button);
-    //setOutputText(button);
-    updateResult();
-  });
-});
-
 
 const speed_dials = document.querySelector('#speed-dials')
 const pace_dials = document.querySelector('#pace-dials')
@@ -676,29 +649,14 @@ function setOutputText(button){
 // C vs F toggle
 
 
-/** Convert Fahrenheit to Celsius, respecting limits */
+/** Convert Fahrenheit to Celsius (limits are enforced by the incrementors) */
 function tempFtoC(f) {
-  let proposed_c = (f - 32)*5/9;
-  if (proposed_c < TEMP_MIN_VALUE_C){
-    proposed_c = TEMP_MIN_VALUE_C
-  }
-  
-  if (proposed_c > TEMP_MAX_VALUE_C){
-    proposed_c = TEMP_MAX_VALUE_C
-  }
-  return proposed_c;
+  return (f - 32)*5/9;
 }
 
-/** Convert Celsius to Fahrenheit */
+/** Convert Celsius to Fahrenheit (limits are enforced by the incrementors) */
 function tempCtoF(c) {
-  let proposed_f = (c * 9 / 5) + 32;
-  if (proposed_f < TEMP_MIN_VALUE_F) {
-    proposed_f = TEMP_MIN_VALUE_F;
-  }
-  if (proposed_f > TEMP_MAX_VALUE_F) {
-    proposed_f = TEMP_MAX_VALUE_F;
-  }
-  return proposed_f;
+  return (c * 9 / 5) + 32;
 }
 
 
@@ -783,7 +741,6 @@ function setTempMode(button){
     }
     temperature_mode = "C"
   }
-  switchTemps();
 }
 
 
@@ -795,9 +752,9 @@ function switchTemps(switch_to_what){
     dewpoint_units.textContent = "F"
     heat_index_units.textContent = "F"
     
-    heat_index_value = tempCtoF(heat_index_value)
-    temperature_value = tempCtoF(temperature_value)
-    dewpoint_value = tempCtoF(dewpoint_value)
+    heat_index_value = Math.round(tempCtoF(heat_index_value))
+    temperature_value = Math.round(tempCtoF(temperature_value))
+    dewpoint_value = Math.round(tempCtoF(dewpoint_value))
     
     // Added dewpoint fix
     if (dewpoint_value > temperature_value){
@@ -808,9 +765,9 @@ function switchTemps(switch_to_what){
     temperature_units.textContent = "C"
     dewpoint_units.textContent = "C"
     heat_index_units.textContent = "C"
-    heat_index_value = tempFtoC(heat_index_value)
-    temperature_value = tempFtoC(temperature_value)
-    dewpoint_value = tempFtoC(dewpoint_value)
+    heat_index_value = Math.round(tempFtoC(heat_index_value))
+    temperature_value = Math.round(tempFtoC(temperature_value))
+    dewpoint_value = Math.round(tempFtoC(dewpoint_value))
     
     if (dewpoint_value > temperature_value){
       dewpoint_value = temperature_value
@@ -837,7 +794,6 @@ let temperature_value = parseFloat(temperature_text.textContent)
 
 // Humidity
 let humidity_text = document.querySelector("#humidity-digit")
-let humidity_units = document.querySelector("#humidity-units") // C or F
 let humidity_value = parseFloat(humidity_text.textContent)
 
 
@@ -869,18 +825,22 @@ function readWeatherConditions(){
     inner_humidity_pct = humidity_value // maybe not necessary but will avoid any weird bugs
   }
   
-  if (inner_humidity_pct <= 25) {
+  // Only warn about the inputs the active mode actually uses
+  const active_temp_c = heat_mode == "heat-index" ? inner_heat_index_c : inner_temp_c
+  const show_humidity_alert = heat_mode != "heat-index" && inner_humidity_pct <= 25
+  
+  if (show_humidity_alert) {
     humidity_alert.classList.remove('hidden')
   } else {
     humidity_alert.classList.add('hidden')
   }
-  if (inner_temp_c <= 0 || inner_heat_index_c <= 0) {
+  if (active_temp_c <= 0) {
     lowtemp_alert.classList.remove('hidden')
   } else {
     lowtemp_alert.classList.add('hidden')
   }
   
-  if (inner_temp_c >= 32 || inner_heat_index_c >= 32) {
+  if (active_temp_c >= 32) {
     hightemp_alert.classList.remove('hidden')
   } else {
     hightemp_alert.classList.add('hidden')
@@ -974,19 +934,14 @@ function increment_heat_index(change){
   let proposed_val = heat_index_value + change
   // UGH need to ifelse the units
   if (temperature_mode == "F"){
-    if (proposed_val <= TEMP_MAX_VALUE_F && proposed_val >= TEMP_MIN_VALUE_F) {
-      //change is allowed
-      heat_index_value = proposed_val
-      heat_index_text.textContent = heat_index_value.toFixed(0)
-    }
+    //clamp to the limit rather than ignoring the click
+    proposed_val = Math.min(TEMP_MAX_VALUE_F, Math.max(TEMP_MIN_VALUE_F, proposed_val))
   }
   if (temperature_mode == "C"){
-    if (proposed_val <= TEMP_MAX_VALUE_C && proposed_val >= TEMP_MIN_VALUE_C) {
-      //change is allowed
-      heat_index_value = proposed_val
-      heat_index_text.textContent = heat_index_value.toFixed(0)
-    }
+    proposed_val = Math.min(TEMP_MAX_VALUE_C, Math.max(TEMP_MIN_VALUE_C, proposed_val))
   }
+  heat_index_value = proposed_val
+  heat_index_text.textContent = heat_index_value.toFixed(0)
   updateResult();
 }
 
@@ -995,19 +950,14 @@ function increment_temperature(change){
   let proposed_val = temperature_value + change
   // UGH need to ifelse the units
   if (temperature_mode == "F"){
-    if (proposed_val <= TEMP_MAX_VALUE_F && proposed_val >= TEMP_MIN_VALUE_F) {
-      //change is allowed
-      temperature_value = proposed_val
-      temperature_text.textContent = temperature_value.toFixed(0)
-    }
+    //clamp to the limit rather than ignoring the click
+    proposed_val = Math.min(TEMP_MAX_VALUE_F, Math.max(TEMP_MIN_VALUE_F, proposed_val))
   }
   if (temperature_mode == "C"){
-    if (proposed_val <= TEMP_MAX_VALUE_C && proposed_val >= TEMP_MIN_VALUE_C) {
-      //change is allowed
-      temperature_value = proposed_val
-      temperature_text.textContent = temperature_value.toFixed(0)
-    }
+    proposed_val = Math.min(TEMP_MAX_VALUE_C, Math.max(TEMP_MIN_VALUE_C, proposed_val))
   }
+  temperature_value = proposed_val
+  temperature_text.textContent = temperature_value.toFixed(0)
   
   // need to enforce dewpoints
   if (dewpoint_value > temperature_value) {
@@ -1021,12 +971,10 @@ function increment_temperature(change){
 
 function increment_humidity(change){
   let proposed_val = humidity_value + change
-  // UGH need to ifelse the units
-  if (proposed_val <= HUMIDITY_MAX_VALUE && proposed_val >= HUMIDITY_MIN_VALUE) {
-    //change is allowed
-    humidity_value = proposed_val
-    humidity_text.textContent = humidity_value.toFixed(0)
-  }
+  //clamp to the limit rather than ignoring the click
+  proposed_val = Math.min(HUMIDITY_MAX_VALUE, Math.max(HUMIDITY_MIN_VALUE, proposed_val))
+  humidity_value = proposed_val
+  humidity_text.textContent = humidity_value.toFixed(0)
   updateResult();
 }
 
@@ -1034,11 +982,10 @@ function increment_humidity(change){
 function increment_dewpoint(change){
   let proposed_val = dewpoint_value + change
   // No need to ifelse the units, BUT note we are dynamically using temperature value to set ceiling!
-  if (proposed_val <= temperature_value && proposed_val >= DEW_POINT_MIN_VALUE) {
-    //change is allowed
-    dewpoint_value = proposed_val
-    dewpoint_text.textContent = dewpoint_value.toFixed(0)
-  }
+  //clamp to the limit rather than ignoring the click
+  proposed_val = Math.min(temperature_value, Math.max(DEW_POINT_MIN_VALUE, proposed_val))
+  dewpoint_value = proposed_val
+  dewpoint_text.textContent = dewpoint_value.toFixed(0)
   updateResult();
 }
 
