@@ -416,6 +416,7 @@ function updateResult(){
   readWeatherConditions()
   doHeatAdjustment()
   updateOutput()
+  saveState()   // every input change funnels through here (see STATE PERSISTENCE below)
 }
 
 
@@ -441,13 +442,18 @@ function updateOutput(){
 // Effort vs pace toggle switch
 // Attach the event listener to the checkbox input
 let effortToggle = document.querySelector('#pace-post .switch input[type="checkbox"]');
-effortToggle.addEventListener('change', function() {
+
+// Single place where the switch position, `effort_mode`, and the sentence around
+// the result are kept in sync, so applyState() can replay a saved position too.
+function setEffortToggle(is_checked){
   let effortText = document.getElementById("pace-or-effort")
   let resultPreText = document.getElementById('result-pre')
   let resultPostText = document.getElementById('result-post')
-  
+
+  effortToggle.checked = is_checked
+
   // if checkbox is checked, we are in EFFORT MODE - consdider swaping>?
-  if (effortToggle.checked){
+  if (is_checked){
     effort_mode = false;
     effortText.innerHTML = "pace"
     resultPreText.innerText = "is the same effort as"
@@ -458,6 +464,10 @@ effortToggle.addEventListener('change', function() {
     resultPreText.innerText = "will result in"
     resultPostText.innerText = "in the heat"
   }
+}
+
+effortToggle.addEventListener('change', function() {
+  setEffortToggle(effortToggle.checked)
   updateResult()
 })
 
@@ -1033,5 +1043,182 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+// ============================================================
+// STATE PERSISTENCE (localStorage) + RESTORE DEFAULTS
+// ============================================================
+// Same pattern as the race-pace / LT1 / CV calculators: every recompute writes
+// the current inputs to localStorage via rw-storage.js; on load the record is
+// validated and replayed through the normal setters, so the UI and the state
+// variables stay in sync. Restore defaults clears the record and replays the
+// defaults. This app never had a state cookie, so there is nothing to migrate.
 
-updateResult();
+const APP_ID = 'heat-adjusted-pace';   // localStorage key rw.heat-adjusted-pace.v1 (rw-storage.js)
+let remember_settings = true;
+
+const DEFAULT_STATE = {
+    version: 1,
+    dials: { d1: 7, d2: 0, d3: 0 },      // pace mm:ss
+    speed: { s1: 6, s2: 0 },             // speed d.d
+    unit: '/mi',                         // active .pace-toggle (also drives pace vs speed dials + output units)
+    pace_switch: true,                   // switch checked = "pace in ..." (effort_mode false); unchecked = "effort in ..."
+    heat_mode: 'humidity',               // heat-index | humidity | dewpoint
+    temp_mode: 'F',                      // F | C  (the weather values below are in these units)
+    weather: { heat_index: 80, temperature: 80, humidity: 50, dewpoint: 60 }
+};
+
+const activeText = (buttons) => {
+    let txt = null;
+    buttons.forEach(btn => { if (btn.classList.contains('active')) txt = btn.textContent.trim(); });
+    return txt;
+}
+
+function getStateObject() {
+    return {
+        version: 1,
+        dials: {
+            d1: parseInt(d1.textContent) || 0,
+            d2: parseInt(d2.textContent) || 0,
+            d3: parseInt(d3.textContent) || 0
+        },
+        speed: {
+            s1: parseInt(s1.textContent) || 0,
+            s2: parseInt(s2.textContent) || 0
+        },
+        unit: activeText(pace_buttons) || DEFAULT_STATE.unit,
+        pace_switch: effortToggle.checked,
+        heat_mode: heat_mode,
+        temp_mode: temperature_mode,
+        weather: {
+            heat_index: heat_index_value,
+            temperature: temperature_value,
+            humidity: humidity_value,
+            dewpoint: dewpoint_value
+        }
+    };
+}
+
+function saveState() {
+    RWStorage.save(APP_ID, getStateObject(), remember_settings);
+}
+
+function loadSavedState() {
+    // Shared localStorage layer (rw-storage.js). No legacy cookie for this app.
+    const saved = RWStorage.load(APP_ID);
+    remember_settings = saved.remember;
+    const remember_toggle_el = document.getElementById('remember-toggle');
+    if (remember_toggle_el) remember_toggle_el.checked = remember_settings;
+    if (!saved.state) return null;
+    try {
+        const state = saved.state;
+        // Version check for future migrations
+        if (!state || state.version !== 1) return null;
+        // localStorage is user-editable, so check the shape before applyState() trusts it
+        if (!state.dials || typeof state.dials !== 'object') return null;
+        if (!state.speed || typeof state.speed !== 'object') return null;
+        if (!state.weather || typeof state.weather !== 'object') return null;
+        return state;
+    } catch (e) {
+        return null;
+    }
+}
+
+// Activate the button in a group whose label matches `text`, routing through the
+// group's setter so dependent labels stay in sync. Returns false if no match.
+function activateButtonByText(buttons, text, setter) {
+    let matched = null;
+    buttons.forEach(btn => { if (btn.textContent.trim() === text) matched = btn; });
+    if (!matched) return false;
+    buttons.forEach(btn => btn.classList.remove('active'));
+    matched.classList.add('active');
+    setter(matched);
+    return true;
+}
+
+// Same, but keyed on the button id (the heat-mode and temp-mode setters branch on id)
+function activateButtonById(buttons, id, setter) {
+    let matched = null;
+    buttons.forEach(btn => { if (btn.id === id) matched = btn; });
+    if (!matched) return false;
+    buttons.forEach(btn => btn.classList.remove('active'));
+    matched.classList.add('active');
+    setter(matched);
+    return true;
+}
+
+const clampInt = (x, lo, hi, fallback) => {
+    const v = parseInt(x);
+    return Number.isFinite(v) ? Math.min(Math.max(v, lo), hi) : fallback;
+}
+
+function applyState(state) {
+    const d = DEFAULT_STATE;
+    const dials = state.dials || d.dials;
+    const speed = state.speed || d.speed;
+    const weather = state.weather || d.weather;
+
+    // 1. Pace and speed dials, clamped to the ranges the incrementors allow
+    d1.textContent = clampInt(dials.d1, 0, 60, d.dials.d1);
+    d2.textContent = clampInt(dials.d2, 0, 5, d.dials.d2);
+    d3.textContent = clampInt(dials.d3, 0, 9, d.dials.d3);
+    s1.textContent = clampInt(speed.s1, 0, 60, d.speed.s1);
+    s2.textContent = clampInt(speed.s2, 0, 9, d.speed.s2);
+
+    // 2. Temperature scale FIRST: setTempMode() converts whatever is on screen,
+    //    so it has to run before the saved (already-in-those-units) values land.
+    const temp_id = state.temp_mode === 'C' ? 'temp-c' : 'temp-f';
+    if (!activateButtonById(temp_mode_buttons, temp_id, setTempMode)) {
+        activateButtonById(temp_mode_buttons, 'temp-f', setTempMode);
+    }
+
+    // 3. Weather values, in the units chosen just above
+    const temp_lo = temperature_mode == "C" ? TEMP_MIN_VALUE_C : TEMP_MIN_VALUE_F;
+    const temp_hi = temperature_mode == "C" ? TEMP_MAX_VALUE_C : TEMP_MAX_VALUE_F;
+    heat_index_value = clampInt(weather.heat_index, temp_lo, temp_hi, d.weather.heat_index);
+    temperature_value = clampInt(weather.temperature, temp_lo, temp_hi, d.weather.temperature);
+    humidity_value = clampInt(weather.humidity, HUMIDITY_MIN_VALUE, HUMIDITY_MAX_VALUE, d.weather.humidity);
+    // dew point can never exceed the air temperature (same rule as increment_dewpoint)
+    dewpoint_value = clampInt(weather.dewpoint, DEW_POINT_MIN_VALUE, temperature_value, d.weather.dewpoint);
+    heat_index_text.textContent = heat_index_value.toFixed(0);
+    temperature_text.textContent = temperature_value.toFixed(0);
+    humidity_text.textContent = humidity_value.toFixed(0);
+    dewpoint_text.textContent = dewpoint_value.toFixed(0);
+
+    // 4. Weather input mode (shows/hides the heat index, temp, humidity, dew point rows)
+    if (!activateButtonById(heat_mode_buttons, 'mode-' + state.heat_mode, setHeatMode)) {
+        activateButtonById(heat_mode_buttons, 'mode-' + d.heat_mode, setHeatMode);
+    }
+
+    // 5. Pace-vs-effort switch (sets the checkbox, effort_mode, and the sentence)
+    setEffortToggle(state.pace_switch !== false);
+
+    // 6. Input units (also picks pace vs speed dials and the output units)
+    if (!activateButtonByText(pace_buttons, state.unit, setPaceText)) {
+        activateButtonByText(pace_buttons, d.unit, setPaceText);
+    }
+
+    // 7. Recompute (this also re-saves)
+    updateResult();
+}
+
+// --- Reset button ---
+const reset_button = document.getElementById('reset-button');
+reset_button.addEventListener('click', () => {
+    RWStorage.clear(APP_ID);
+    applyState(DEFAULT_STATE);
+});
+
+// --- Remember-settings toggle ---
+const remember_toggle = document.getElementById('remember-toggle');
+remember_toggle.addEventListener('change', () => {
+    remember_settings = remember_toggle.checked;
+    saveState();  // with the flag off this drops the stored state and keeps only the preference
+});
+
+// ---- Initialization ----
+const savedState = loadSavedState();
+try {
+    applyState(savedState || DEFAULT_STATE);
+} catch (e) {
+    RWStorage.clear(APP_ID);
+    applyState(DEFAULT_STATE);
+}

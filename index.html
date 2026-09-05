@@ -21,6 +21,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="styles.css?v=1.1.0">
     <link rel="stylesheet" href="app-gallery.css?v=22e5443b">
+    <script src="rw-storage.js?v=1.0.0" defer></script>
     <script src="scripts.js?v=1.1.0" defer></script>
     <script src="apps.js?v=22e5443b" defer></script>
     <script src="app-gallery.js?v=22e5443b" defer></script>
@@ -224,6 +225,18 @@
                     <span class='alert-text'>These predictions are only an estimate. Heat adaptation and individual variation in heat tolerance play a major role in determining your body's response to heat. Train responsibly in hot conditions and consider rescheduling sessions during periods of extreme heat.</span>
                 </div>
             </div>
+            <div class="reset-box">
+                <button class="material-icons flip-button" title="Restore defaults" id="reset-button">history</button>
+                <span class="reset-text">Restore defaults</span>
+                <a href="#calculator-settings" class="i-note">?</a>
+            </div>
+            <div class="remember-box">
+                <span class="remember-text">Remember settings</span>
+                <label class="switch">
+                    <input type="checkbox" id="remember-toggle" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
         </div>
         <hr class="separator-thick">
         <div class="rw-app-gallery" data-current="heat-adjusted-pace"></div>
@@ -282,6 +295,8 @@
             <h3>Details on the statistical model<a class="material-icons up" href="#top">arrow_upward</a></h3>
             <p>One other note regarding the model: this app does <em>not </em>directly implement the equations that Mantzios et al. report in their paper—instead, I use their open-access data to fit a different statistical model to more directly account for some of the other sources of variation in marathon performance, such as the difficulty of different race courses and long-term secular changes in marathon performance.</p>
             <p>This app, plus the R code used to fit the model, are open-source on GitHub if you&rsquo;d like to check out how I fit the model in detail.</p>
+            <h2 id="calculator-settings">Calculator settings<a class="material-icons up" href="#top">arrow_upward</a></h2>
+            <p>This calculator will remember your pace, pace units, the pace-versus-effort switch, and your weather settings&mdash;input mode, temperature scale, and the temperature, humidity, dew point, and heat index values&mdash;in your browser&rsquo;s local storage. So, when you come back to the calculator later, you&rsquo;ll be able to pick up where you left off. You can reset all settings to their defaults using the <span class="material-icons inline-icon">history</span> button, or turn the memory off entirely with the &ldquo;Remember settings&rdquo; switch.</p>
             <h2 id="get-updates">Support my work<a class="material-icons up" href="#top">arrow_upward</a></h2>
             <p>If you want to find out when I have new apps and research coming out, sign up for my email list below! It's the best way to follow my work. I have several major projects coming out soon that you won't want to miss</p>
             <p>If you're training for the marathon, be sure to check out my new book, <strong><a href="https://amzn.to/43mIH2B" class="plausible-event-name=Body+Book+Click">Marathon Excellence for Everyone</a></strong>. It covers the modern approach to marathon training, including training plans, racing strategies, and the latest science on training.</p>
