@@ -2,7 +2,6 @@
 
 
 const RUNNER_SPEED_DEFAULT = 3.83176 // 7:00/mi
-const DEFAULT_OUTPUT_SPEED_M_S = 3.915669 // fix later once you do calcs
 
 
 const TEMP_MAX_VALUE_F = 120
@@ -19,13 +18,7 @@ const DEW_POINT_MIN_VALUE = -40
 // i.e. max dew point = current temp
 
 
-const INITIAL_HEAT_INDEX_F = 80
-const INITIAL_TEMP_F = 80
-const INITIAL_DEWPOINT_F = 60
-const INITIAL_HUMIDITY = 50
-
-
-let output_speed_ms = DEFAULT_OUTPUT_SPEED_M_S
+let output_speed_ms = RUNNER_SPEED_DEFAULT // overwritten by the first updateResult()
 let input_m_s = RUNNER_SPEED_DEFAULT // just read it first time from pace dials
 let pace_or_speed = "pace"
 let effort_mode = false
@@ -33,11 +26,13 @@ let effort_mode = false
 let temperature_mode = "F"
 let heat_mode = "humidity"
 
-let inner_temp_c = tempFtoC(INITIAL_TEMP_F) // keep an inner temperature for lookups
-let inner_humidity_pct = INITIAL_HUMIDITY
-let inner_heat_index_c = tempFtoC(INITIAL_HEAT_INDEX_F) // ditto
-let inner_dewpoint_c = tempFtoC(INITIAL_DEWPOINT_F)
-// hmmm need to update these...
+// Inner (lookup) weather values, always in Celsius. readWeatherConditions() sets all
+// four from the on-screen values before every calculation, so there is nothing to seed
+// here — the DOM defaults (and the saved state) are the single source of truth.
+let inner_temp_c
+let inner_humidity_pct
+let inner_heat_index_c
+let inner_dewpoint_c
 
 
 
@@ -756,29 +751,44 @@ function setTempMode(button){
 
 
 
+// The dials only ever show whole degrees, so converting a value and converting it back
+// used to drift: 80 F -> round(26.67) = 27 C -> round(80.6) = 81 F, and the answer moved
+// even though the user never touched a stepper. Fix: remember, per value, the number the
+// user last saw in the *other* scale, and hand it straight back on the return trip.
+// A memo only counts while the displayed value is still the one the memo produced, so
+// stepping the dial (or restoring a saved state) retires it on its own.
+const temp_toggle_memo = { heat_index: null, temperature: null, dewpoint: null }
+
+function convertTempValue(key, value, convert){
+  const memo = temp_toggle_memo[key]
+  const converted = (memo && memo.produced === value) ? memo.came_from : Math.round(convert(value))
+  temp_toggle_memo[key] = { came_from: value, produced: converted }
+  return converted
+}
+
 function switchTemps(switch_to_what){
   if (switch_to_what == "F"){
     temperature_units.textContent = "F"
     dewpoint_units.textContent = "F"
     heat_index_units.textContent = "F"
-    
-    heat_index_value = Math.round(tempCtoF(heat_index_value))
-    temperature_value = Math.round(tempCtoF(temperature_value))
-    dewpoint_value = Math.round(tempCtoF(dewpoint_value))
-    
+
+    heat_index_value = convertTempValue("heat_index", heat_index_value, tempCtoF)
+    temperature_value = convertTempValue("temperature", temperature_value, tempCtoF)
+    dewpoint_value = convertTempValue("dewpoint", dewpoint_value, tempCtoF)
+
     // Added dewpoint fix
     if (dewpoint_value > temperature_value){
       dewpoint_value = temperature_value
     }
-    
+
   } else if (switch_to_what == "C"){
     temperature_units.textContent = "C"
     dewpoint_units.textContent = "C"
     heat_index_units.textContent = "C"
-    heat_index_value = Math.round(tempFtoC(heat_index_value))
-    temperature_value = Math.round(tempFtoC(temperature_value))
-    dewpoint_value = Math.round(tempFtoC(dewpoint_value))
-    
+    heat_index_value = convertTempValue("heat_index", heat_index_value, tempFtoC)
+    temperature_value = convertTempValue("temperature", temperature_value, tempFtoC)
+    dewpoint_value = convertTempValue("dewpoint", dewpoint_value, tempFtoC)
+
     if (dewpoint_value > temperature_value){
       dewpoint_value = temperature_value
     }

@@ -114,6 +114,8 @@
     --hover-color: #bde2ff;
     --active-color:#2196F3;
     --link-hover-color:#84caff;
+    --warning-color: #f59e0b;
+    --error-color: #ef4444;
     --soft-white: #f7f7f7;
     --soft-black: #333;
     --gray-out: #6b7280;
@@ -451,6 +453,24 @@ main {
     border-radius: 10px;
     padding: 0.75em;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.05); 
+}
+
+/* Severity variants. Plain .alert-inner is the cyan "heads up" note; these two mark
+   the cases where the model is on thinner ice, so a warning cannot be mistaken for
+   information. Tint/shade derived from the root palette tokens (hard-coded fallbacks
+   first, for browsers without color-mix). */
+.alert-inner.alert-warning {
+    background-color: #fef3c7;
+    color: #92400e;
+    background-color: color-mix(in srgb, var(--warning-color) 20%, white);
+    color: color-mix(in srgb, var(--warning-color) 55%, black);
+}
+
+.alert-inner.alert-error {
+    background-color: #fee2e2;
+    color: #991b1b;
+    background-color: color-mix(in srgb, var(--error-color) 15%, white);
+    color: color-mix(in srgb, var(--error-color) 65%, black);
 }
 
 .disclaimer-box{

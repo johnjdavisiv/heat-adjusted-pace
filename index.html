@@ -31,7 +31,7 @@
 <body>
     <header>
         <div class="header-content">
-            <a href="https://apps.runningwritings.com"><img class="logo" id="top" src="images/RunningWritings-logo.png"></a>
+            <a href="https://apps.runningwritings.com"><img class="logo" id="top" src="images/RunningWritings-logo.png" alt="Running Writings"></a>
             <a class="home-link" href="https://apps.runningwritings.com">Running Writings</a>
             <nav>
                 <a href="#how-to-use">How to use</a>
@@ -198,12 +198,12 @@
                 </div>
             </div>
             <div class="alert-box hidden" id="high-temp-alert">
-                <div class="alert-inner">
+                <div class="alert-inner alert-warning">
                     <span class='alert-text'>⚠️ Underlying data are sparse at very high temperatures! Output may be incorrect</span>
                 </div>
             </div>
             <div class="alert-box hidden" id="low-temp-alert">
-                <div class="alert-inner">
+                <div class="alert-inner alert-error">
                     <span class='alert-text'>⚠️ Temperatures below freezing are rare in the dataset! Output may be incorrect</span>
                 </div>
             </div>
@@ -254,7 +254,7 @@
             <p>“Effort mode,” in contrast, can be enabled by flipping the toggle, and will convert your ideal-weather pace into a heat-adjusted pace (or “HAP”). In this mode, the interpretation of the calculator is as follows:</p>
             <p class="bq-text">Running at 7:00/mi cool-weather effort on a day with a heat index of 80° F will result in an actual pace of 7:13/mi in the heat.</p>
             <p>Effort mode is useful when you know what kind of shape you are in during ideal conditions, but need to adjust your workout or race pace for hot weather.</p>
-            <p>Note that the "asymmetry" here (-12 vs. +13 seconds) is expected, and is a natural consequence of how the model works: it&rsquo;s modeling the effect of heat and humidty on your <em>speed</em>, which has nonlinear effects on your <em>pace</em>.</p>
+            <p>Note that the "asymmetry" here (-12 vs. +13 seconds) is expected, and is a natural consequence of how the model works: it&rsquo;s modeling the effect of heat and humidity on your <em>speed</em>, which has nonlinear effects on your <em>pace</em>.</p>
             <h2>Temperature, humidity, dew point, and heat index</h2>
             <p>All runners know that hot weather is about more than just the thermometer. The humidity also affects how efficiently your body can shed heat via sweating, which is why hot and humid conditions are so much worse than a dry heat.</p>
             <p>This heat-adjusted pace calculator has three different ways to specify the weather conditions to take temperature and humidity into account: heat index, heat + relative humidity, and heat + dew point.</p>
@@ -262,7 +262,7 @@
             <p>Heat index is empirically derived from data on (sedentary) human subjects, and does a reasonable job, but because the calculation bakes in a number of assumptions that may not be valid during running, adjusting workout paces with heat index is going to be inherently less accurate than using heat and humidity or heat and dew point.</p>
             <p>The heat index used in the data analysis for this web app is specifically the <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.wpc.ncep.noaa.gov/html/heatindex_equation.shtml"><span style="color: rgb(17, 85, 204)">United States National Weather Service&rsquo;s heat index equation</span></a>, developed by Lans P. Rothfusz in 1990. Note that other heat-index-like measures, such as Humidex, RealFeel, and FeelsLike temperatures, may not agree with the NWS heat index, and also suffer from the same baked-in assumptions.</p>
             <p>The <strong>temperature + humidity</strong> and <strong>temperature + dew point</strong> calculations, in contrast, allow the marathon data to “speak for themselves”&mdash;the model explicitly allows for heat and humidity to interact in a nonlinear way on running times, as follows:</p>
-            <img src="images/heat-adjusted-pace-for-runners.png">
+            <img src="images/heat-adjusted-pace-for-runners.png" alt="Chart: hotter weather means slower marathon times. Percent slowdown plotted against air temperature for four humidity levels. All four curves bottom out near 48° F (9° C) and climb steeply above 60° F, and the humidity levels fan apart as it gets hotter: at 90° F, 20% humidity costs about 2% while 80% humidity costs about 7.5%.">
             <p>Temperature, relative humidity, and dewpoint are deterministically linked: if you know air temperature and the dew point, you can calculate relative humidity (0&ndash;100%), and vice versa. For this reason, the temperature + humidity and temperature + dew point modes are <strong>equally accurate</strong> and give identical results.</p>
             <p>Dew point has some mathematical constraints: it cannot be higher than the air temperature, so if you reduce the temperature to below the dew point, the dew point will come down as well.</p>
             <h2>Cold-adjusted pace for runners</h2>
@@ -273,8 +273,8 @@
             <p>First up, the men&rsquo;s marathon at the 2007 World Championships: the race was held in Osaka, Japan, in brutal heat and humidity: 82° F (28 C) and 72% humidity at the start of the race. The winner, Luke Kibet, ran 2:15:59—a pace of 5:11/mi. In these conditions, his “HAP,” according to the app, is 4:55/mi, which would be a 2:08:55 in ideal conditions. What was Luke Kibet&rsquo;s personal best at the time? 2:08:52!</p>
             <p>Second, the late, great, Sammy Wanjiru&rsquo;s 2:06:32 Olympic Record (4:50/mi) at the 2008 Beijing Olympics. <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.nytimes.com/2008/12/28/sports/olympics/28marathon.html"><span style="color: rgb(17, 85, 204)">The New York Times reports</span></a> that weather at the start was 70° F (21 C) with 72% humidity (though temperatures rose throughout the race). Using the starting conditions, Wanjiru&rsquo;s performance “converts” to 2:04:32—faster than his official personal best of 2:05:10, but not at all out of line with what you would expect from a 58:33 half marathoner had his career not been tragically cut short.</p>
             <p>Third, the women&rsquo;s winner at the infamously hot 2007 Chicago Marathon, which was so hot that the race was called off after a few hours. In a race that rose to upwards of 81° F (27° C) and 62% humidity, Berhane Adere won in 2:33:49 (5:52/mi). Her personal best is 2:20:42 (5:22/mi), which is much faster than the heat-adjusted prediction of 2:28:35 (5:40/mi), showing that there&rsquo;s still a good amount of error that can come into play (though Adere&rsquo;s next two races, a 2:22 and a 2:25, are somewhat closer to the heat-adjusted pace from Chicago 2007).</p>
-            <p>Lastly, a race that has not happened yet: This summer&rsquo;s World Championships will take place in Tokyo in August. The women&rsquo;s marathon is on Sunday, September 14 at 8 AM Tokyo time, and the men&rsquo;s race is the following day.</p>
-            <p>At the time of writing (early September), the long-range weather forecast predicts mid-race conditions of about 84° F (29° C) and a dew point of 73° F (23° C), which could make the pace 15&ndash;16 seconds per mile slow. How accurate will this heat-adjusted pace be? Check back afterwards and find out!</p>
+            <p>Lastly, an example of looking forward to a race instead of back at one: the 2025 World Championships in Tokyo, where the women&rsquo;s marathon went off at 8 AM Tokyo time on Sunday, September 14, and the men&rsquo;s race the following day.</p>
+            <p>Beforehand, the forecast called for mid-race conditions of about 84° F (29° C) and a dew point of 73° F (23° C). That is worth 15&ndash;16 seconds per mile according to this app&mdash;the kind of adjustment you want to have made your peace with before you get to the start line, rather than during the race.</p>
             <h2>Limitations<a class="material-icons up" href="#top"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z"/></svg></a></h2>
             <p>This app&rsquo;s heat-adjusted paces are a “smeared out” estimate across runners of varying levels of heat acclimation. Adapting to the heat makes a big difference in your performance in the heat, so if you&rsquo;re well adapted, you may be able to beat the predictions of this model, and conversely, if you are not heat-adapted, you may fare worse.</p>
             <p>Additionally, this app was fit to data from <strong>marathon performances</strong>. Heat will not affect shorter races and workouts as much. However, marathon performances are a good starting point for heat adjusted paces, since a two, three, or four-hour event basically requires a thermal equilibrium—your pace is going to asymptote at a value where your heat production equals your heat loss. In a shorter race, like the 5k, you can outrun your thermal limits.</p>
@@ -284,7 +284,6 @@
             <p>The data used to build this app are quite diverse, but some weather conditions are not often seen at major marathons. Specifically, humidity values below 25% are extremely rare, and temperatures below freezing (0° C, 32° F) or above 95° F / 35° C / are rare as well.</p>
             <p>Specifically, <strong>marathons are almost never held in extreme heat (&gt;90&deg; F / 32&deg; C)</strong>, so the dataset that powers this calculator is not going to be reliable in extraordinary heat.</p>
             <p>There are also some edge cases where other weather-related factors might come into play: when humidity is measured at close to 100%, for example, that&rsquo;s often because it&rsquo;s raining!</p>
-            <p>One shortcoming of marathon performances is that</p>
             <p>Currently this calculator does not support a mode for WetBulb Globe Temperature (WBGT) because it is usually only used in scientific research and for determining the weather alert status at road races, since you have to actually take a measurement—you can&rsquo;t predict or forecast it. But if you&rsquo;d like me to add WBGT it will not be too hard. If I get enough interest I may add it as an additional input mode later.</p>
             <h3>This app may underestimate the individual-level effects of heat<a class="material-icons up" href="#top"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z"/></svg></a></h3>
             <p>One thing to be aware of is that the underlying data used to fit this model might introduce a subtle bias towards less aggressive adjustments for hot conditions.</p>
