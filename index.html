@@ -16,9 +16,8 @@
     <meta name="author" content="John J Davis, PhD">
     <title>Heat and humidity pace calculator for runners - from Running Writings</title>
     <link rel="icon" href="https://apps.runningwritings.com/heat-adjusted-pace/images/RW-favicon.png" type="image/png">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preload" href="fonts/roboto-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/pt-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" type="text/css" href="styles.css?v=1.1.0">
     <link rel="stylesheet" href="app-gallery.css?v=22e5443b">
     <script src="rw-storage.js?v=1.0.0" defer></script>
@@ -54,38 +53,38 @@
                 <div class="left-dummy"></div>
                 <div class="clock" id="pace-dials">
                     <div class="digitbox">
-                        <button class="material-icons svg-arrow" id="d1-up">expand_less</button>
+                        <button class="material-icons svg-arrow" id="d1-up"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m296-345-56-56 240-240 240 240-56 56-184-184-184 184Z"/></svg></button>
                         <div class="digit" id="d1">7</div>
-                        <button class="material-icons svg-arrow" id="d1-down">expand_more</button>
+                        <button class="material-icons svg-arrow" id="d1-down"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z"/></svg></button>
                     </div>
                     <div class="digitbox colon">
                         <span class="digit">:</span>
                     </div>
                     <div class="digitbox">
-                        <button class="material-icons svg-arrow" id="d2-up">expand_less</button>
+                        <button class="material-icons svg-arrow" id="d2-up"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m296-345-56-56 240-240 240 240-56 56-184-184-184 184Z"/></svg></button>
                         <div class="digit" id="d2">0</div>
-                        <button class="material-icons svg-arrow" id="d2-down">expand_more</button>
+                        <button class="material-icons svg-arrow" id="d2-down"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z"/></svg></button>
                     </div>
                     <div class="digitbox">
-                        <button class="material-icons svg-arrow" id="d3-up">expand_less</button>
+                        <button class="material-icons svg-arrow" id="d3-up"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m296-345-56-56 240-240 240 240-56 56-184-184-184 184Z"/></svg></button>
                         <div class="digit" id="d3">0</div>
-                        <button class="material-icons svg-arrow" id="d3-down">expand_more</button>
+                        <button class="material-icons svg-arrow" id="d3-down"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z"/></svg></button>
                     </div>
                     <div class="unit-text" id="pace-units">/mi</div>
                 </div>
                 <div class="clock hidden" id="speed-dials">
                     <div class="digitbox">
-                        <button class="material-icons svg-arrow" id="s1-up">expand_less</button>
+                        <button class="material-icons svg-arrow" id="s1-up"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m296-345-56-56 240-240 240 240-56 56-184-184-184 184Z"/></svg></button>
                         <div class="digit" id="s1">6</div>
-                        <button class="material-icons svg-arrow" id="s1-down">expand_more</button>
+                        <button class="material-icons svg-arrow" id="s1-down"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z"/></svg></button>
                     </div>
                     <div class="digitbox colon">
                         <span class="digit">.</span>
                     </div>
                     <div class="digitbox">
-                        <button class="material-icons svg-arrow" id="s2-up">expand_less</button>
+                        <button class="material-icons svg-arrow" id="s2-up"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m296-345-56-56 240-240 240 240-56 56-184-184-184 184Z"/></svg></button>
                         <div class="digit" id="s2">0</div>
-                        <button class="material-icons svg-arrow" id="s2-down">expand_more</button>
+                        <button class="material-icons svg-arrow" id="s2-down"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z"/></svg></button>
                     </div>
                     <div class="unit-text" id="speed-units">mph</div>
                 </div>
@@ -110,8 +109,8 @@
             <!-- Heat/humidity input -->
             <div class="arrow-container hidden" id="heat-index-input">
                 <div class="arrow-box">
-                    <button class="material-icons pct-button" id="heat-index-m5" title="-5">keyboard_double_arrow_left</button>
-                    <button class="material-icons pct-button" id="heat-index-m1" title="-1">keyboard_arrow_left</button>
+                    <button class="material-icons pct-button" id="heat-index-m5" title="-5"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M440-240 200-480l240-240 56 56-183 184 183 184-56 56Zm264 0L464-480l240-240 56 56-183 184 183 184-56 56Z"/></svg></button>
+                    <button class="material-icons pct-button" id="heat-index-m1" title="-1"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z"/></svg></button>
                 </div>
                 <div class="wind-text">
                     <span class="wind-digits" id="heat-index-digit">80</span>
@@ -121,15 +120,15 @@
                     <span class="wind-label">heat index</span>
                 </div>
                 <div class="arrow-box">
-                    <button class="material-icons pct-button" id="heat-index-p1" title="+1">keyboard_arrow_right</button>
-                    <button class="material-icons pct-button" id="heat-index-p5" title="+5">keyboard_double_arrow_right</button>
+                    <button class="material-icons pct-button" id="heat-index-p1" title="+1"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/></svg></button>
+                    <button class="material-icons pct-button" id="heat-index-p5" title="+5"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M383-480 200-664l56-56 240 240-240 240-56-56 183-184Zm264 0L464-664l56-56 240 240-240 240-56-56 183-184Z"/></svg></button>
                 </div>
             </div>
             <!-- Temperature -->
             <div class="arrow-container" id="temperature-input">
                 <div class="arrow-box">
-                    <button class="material-icons pct-button" id="temperature-m5" title="-5">keyboard_double_arrow_left</button>
-                    <button class="material-icons pct-button" id="temperature-m1" title="-1">keyboard_arrow_left</button>
+                    <button class="material-icons pct-button" id="temperature-m5" title="-5"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M440-240 200-480l240-240 56 56-183 184 183 184-56 56Zm264 0L464-480l240-240 56 56-183 184 183 184-56 56Z"/></svg></button>
+                    <button class="material-icons pct-button" id="temperature-m1" title="-1"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z"/></svg></button>
                 </div>
                 <div class="wind-text">
                     <span class="wind-digits" id="temperature-digit">80</span>
@@ -139,8 +138,8 @@
                     <span class="wind-label">temperature</span>
                 </div>
                 <div class="arrow-box">
-                    <button class="material-icons pct-button" id="temperature-p1" title="+1">keyboard_arrow_right</button>
-                    <button class="material-icons pct-button" id="temperature-p5" title="+5">keyboard_double_arrow_right</button>
+                    <button class="material-icons pct-button" id="temperature-p1" title="+1"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/></svg></button>
+                    <button class="material-icons pct-button" id="temperature-p5" title="+5"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M383-480 200-664l56-56 240 240-240 240-56-56 183-184Zm264 0L464-664l56-56 240 240-240 240-56-56 183-184Z"/></svg></button>
                 </div>
             </div>
             <!-- "and" only shows up when using humidity mode or dew point mode -->
@@ -150,8 +149,8 @@
             <!-- Humidity selector (un-hidden when mode selected) -->
             <div class="arrow-container" id="humidity-input">
                 <div class="arrow-box">
-                    <button class="material-icons pct-button" id="humidity-m5" title="-5">keyboard_double_arrow_left</button>
-                    <button class="material-icons pct-button" id="humidity-m1" title="-1">keyboard_arrow_left</button>
+                    <button class="material-icons pct-button" id="humidity-m5" title="-5"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M440-240 200-480l240-240 56 56-183 184 183 184-56 56Zm264 0L464-480l240-240 56 56-183 184 183 184-56 56Z"/></svg></button>
+                    <button class="material-icons pct-button" id="humidity-m1" title="-1"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z"/></svg></button>
                 </div>
                 <div class="wind-text">
                     <span class="wind-digits" id="humidity-digit">50</span>
@@ -159,15 +158,15 @@
                     <span class="wind-label">humidity</span>
                 </div>
                 <div class="arrow-box">
-                    <button class="material-icons pct-button" id="humidity-p1" title="+1">keyboard_arrow_right</button>
-                    <button class="material-icons pct-button" id="humidity-p5" title="+5">keyboard_double_arrow_right</button>
+                    <button class="material-icons pct-button" id="humidity-p1" title="+1"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/></svg></button>
+                    <button class="material-icons pct-button" id="humidity-p5" title="+5"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M383-480 200-664l56-56 240 240-240 240-56-56 183-184Zm264 0L464-664l56-56 240 240-240 240-56-56 183-184Z"/></svg></button>
                 </div>
             </div>
             <!-- Dew point selector (un-hidden when mode selected) -->
             <div class="arrow-container hidden" id="dewpoint-input">
                 <div class="arrow-box">
-                    <button class="material-icons pct-button" id="dewpoint-m5" title="-5">keyboard_double_arrow_left</button>
-                    <button class="material-icons pct-button" id="dewpoint-m1" title="-1">keyboard_arrow_left</button>
+                    <button class="material-icons pct-button" id="dewpoint-m5" title="-5"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M440-240 200-480l240-240 56 56-183 184 183 184-56 56Zm264 0L464-480l240-240 56 56-183 184 183 184-56 56Z"/></svg></button>
+                    <button class="material-icons pct-button" id="dewpoint-m1" title="-1"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z"/></svg></button>
                 </div>
                 <div class="wind-text">
                     <span class="wind-digits" id="dewpoint-digit">60</span>
@@ -177,8 +176,8 @@
                     <span class="wind-label">dew point</span>
                 </div>
                 <div class="arrow-box">
-                    <button class="material-icons pct-button" id="dewpoint-p1" title="+1">keyboard_arrow_right</button>
-                    <button class="material-icons pct-button" id="dewpoint-p5" title="+5">keyboard_double_arrow_right</button>
+                    <button class="material-icons pct-button" id="dewpoint-p1" title="+1"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/></svg></button>
+                    <button class="material-icons pct-button" id="dewpoint-p5" title="+5"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M383-480 200-664l56-56 240 240-240 240-56-56 183-184Zm264 0L464-664l56-56 240 240-240 240-56-56 183-184Z"/></svg></button>
                 </div>
             </div>
             <div class="unit-stack-horiz wind-unit-select">
@@ -226,7 +225,7 @@
                 </div>
             </div>
             <div class="reset-box">
-                <button class="material-icons flip-button" title="Restore defaults" id="reset-button">history</button>
+                <button class="material-icons flip-button" title="Restore defaults" id="reset-button"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M480-120q-138 0-240.5-91.5T122-440h82q14 104 92.5 172T480-200q117 0 198.5-81.5T760-480q0-117-81.5-198.5T480-760q-69 0-129 32t-101 88h110v80H120v-240h80v94q51-64 124.5-99T480-840q75 0 140.5 28.5t114 77q48.5 48.5 77 114T840-480q0 75-28.5 140.5t-77 114q-48.5 48.5-114 77T480-120Zm112-192L440-464v-216h80v184l128 128-56 56Z"/></svg></button>
                 <span class="reset-text">Restore defaults</span>
                 <a href="#calculator-settings" class="i-note">?</a>
             </div>
@@ -241,12 +240,12 @@
         <hr class="separator-thick">
         <div class="rw-app-gallery" data-current="heat-adjusted-pace"></div>
         <div class="explainer-text">
-            <h2 id="how-to-use">How to use<a class="material-icons up" href="#top">arrow_upward</a></h2>
+            <h2 id="how-to-use">How to use<a class="material-icons up" href="#top"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z"/></svg></a></h2>
             <p>This app calculates pace adjustments for running long workouts and races in hot and humid conditions. You can input the local weather as a heat index, temperature + relative humidity, or temperature + dew point.</p>
             <p>The heat-adjusted paces come from a statistical model fit to data from 3,891 marathon runners across 754 different races, though the pace adjustments are also a good estimate for any long continuous effort, even if it&rsquo;s not a marathon race.</p>
             <p>Keep in mind that the predictions from this app are an <em>estimated average across individuals</em>. Factors like heat acclimation, sun exposure, shade, wind, and individual heat tolerance affect how much a given set of weather conditions will affect you specifically.</p>
             <p>Likewise, the structure of your workout matters too. For example, 40 min continuous at half marathon pace will be affected by heat to a much greater degree than 10 x 4 minutes at half marathon pace with one minute of walking rest, even though the total workload is the same.</p>
-            <h2 id="effort-vs-pace">Heat-adjusted pace and ideal-weather effort<a class="material-icons up" href="#top">arrow_upward</a></h2>
+            <h2 id="effort-vs-pace">Heat-adjusted pace and ideal-weather effort<a class="material-icons up" href="#top"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z"/></svg></a></h2>
             <p>This calculator has two modes to deal with the most common use cases. “Pace mode” (the default) allows you to convert your actual workout or race pace into a predicted ideal-weather pace. For example:</p>
             <p class="bq-text">Running at 7:00/mi pace on a day with a heat index of 80° F is the same effort as running 6:48/mi in ideal conditions</p>
             <p>Pace mode is useful when you ran a workout or a race in hot conditions, and want to know what you might&rsquo;ve been capable of in ideal weather.</p>
@@ -267,14 +266,14 @@
             <h2>Cold-adjusted pace for runners</h2>
             <p>This app is primarily designed for heat-related adjustments, but the underlying dataset does have enough examples to provide a rudimentary adjustment for cold conditions as well—marathon performance starts to suffer, albeit very modestly, once temperatures approach freezing (32° F / 0° C).</p>
             <p>I have intentionally left this capability enabled in the model, but you should be much more cautious about cold-weather adjustments. Air temperatures below freezing are very rare in the dataset, so the app will flag a warning about reliability for very cold temps.</p>
-            <h2>Is this heat adjusted pace model accurate? A few case studies<a class="material-icons up" href="#top">arrow_upward</a></h2>
+            <h2>Is this heat adjusted pace model accurate? A few case studies<a class="material-icons up" href="#top"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z"/></svg></a></h2>
             <p>Let&rsquo;s look at a few case studies on performance in hot and humid conditions to see how this app&rsquo;s predictions fare.</p>
             <p>First up, the men&rsquo;s marathon at the 2007 World Championships: the race was held in Osaka, Japan, in brutal heat and humidity: 82° F (28 C) and 72% humidity at the start of the race. The winner, Luke Kibet, ran 2:15:59—a pace of 5:11/mi. In these conditions, his “HAP,” according to the app, is 4:55/mi, which would be a 2:08:55 in ideal conditions. What was Luke Kibet&rsquo;s personal best at the time? 2:08:52!</p>
             <p>Second, the late, great, Sammy Wanjiru&rsquo;s 2:06:32 Olympic Record (4:50/mi) at the 2008 Beijing Olympics. <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.nytimes.com/2008/12/28/sports/olympics/28marathon.html"><span style="color: rgb(17, 85, 204)">The New York Times reports</span></a> that weather at the start was 70° F (21 C) with 72% humidity (though temperatures rose throughout the race). Using the starting conditions, Wanjiru&rsquo;s performance “converts” to 2:04:32—faster than his official personal best of 2:05:10, but not at all out of line with what you would expect from a 58:33 half marathoner had his career not been tragically cut short.</p>
             <p>Third, the women&rsquo;s winner at the infamously hot 2007 Chicago Marathon, which was so hot that the race was called off after a few hours. In a race that rose to upwards of 81° F (27° C) and 62% humidity, Berhane Adere won in 2:33:49 (5:52/mi). Her personal best is 2:20:42 (5:22/mi), which is much faster than the heat-adjusted prediction of 2:28:35 (5:40/mi), showing that there&rsquo;s still a good amount of error that can come into play (though Adere&rsquo;s next two races, a 2:22 and a 2:25, are somewhat closer to the heat-adjusted pace from Chicago 2007).</p>
             <p>Lastly, a race that has not happened yet: This summer&rsquo;s World Championships will take place in Tokyo in August. The women&rsquo;s marathon is on Sunday, September 14 at 8 AM Tokyo time, and the men&rsquo;s race is the following day.</p>
             <p>At the time of writing (early September), the long-range weather forecast predicts mid-race conditions of about 84° F (29° C) and a dew point of 73° F (23° C), which could make the pace 15&ndash;16 seconds per mile slow. How accurate will this heat-adjusted pace be? Check back afterwards and find out!</p>
-            <h2>Limitations<a class="material-icons up" href="#top">arrow_upward</a></h2>
+            <h2>Limitations<a class="material-icons up" href="#top"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z"/></svg></a></h2>
             <p>This app&rsquo;s heat-adjusted paces are a “smeared out” estimate across runners of varying levels of heat acclimation. Adapting to the heat makes a big difference in your performance in the heat, so if you&rsquo;re well adapted, you may be able to beat the predictions of this model, and conversely, if you are not heat-adapted, you may fare worse.</p>
             <p>Additionally, this app was fit to data from <strong>marathon performances</strong>. Heat will not affect shorter races and workouts as much. However, marathon performances are a good starting point for heat adjusted paces, since a two, three, or four-hour event basically requires a thermal equilibrium—your pace is going to asymptote at a value where your heat production equals your heat loss. In a shorter race, like the 5k, you can outrun your thermal limits.</p>
             <p>This calculator uses the weather conditions at the halfway point of the race for the race winner (so, about one hour into the race). The fact that slower runners take longer to finish a race necessarily means they are exposed to higher temperatures, at least for races that start in the morning.</p>
@@ -285,19 +284,19 @@
             <p>There are also some edge cases where other weather-related factors might come into play: when humidity is measured at close to 100%, for example, that&rsquo;s often because it&rsquo;s raining!</p>
             <p>One shortcoming of marathon performances is that</p>
             <p>Currently this calculator does not support a mode for WetBulb Globe Temperature (WBGT) because it is usually only used in scientific research and for determining the weather alert status at road races, since you have to actually take a measurement—you can&rsquo;t predict or forecast it. But if you&rsquo;d like me to add WBGT it will not be too hard. If I get enough interest I may add it as an additional input mode later.</p>
-            <h3>This app may underestimate the individual-level effects of heat<a class="material-icons up" href="#top">arrow_upward</a></h3>
+            <h3>This app may underestimate the individual-level effects of heat<a class="material-icons up" href="#top"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z"/></svg></a></h3>
             <p>One thing to be aware of is that the underlying data used to fit this model might introduce a subtle bias towards less aggressive adjustments for hot conditions.</p>
             <p>The statistical model that powers this heat-adjusted pace app relies on data reported in a <a target="_blank" rel="noopener noreferrer nofollow" href="https://pubmed.ncbi.nlm.nih.gov/34652333/"><span style="color: rgb(17, 85, 204)">2022 paper by Konstantinos Mantzios and colleagues</span></a>. The dataset, and the paper, are excellent, but the methods do introduce a small issue.</p>
             <p>The basic idea is that you can estimate the effects of heat and humidity by looking at the effects on races for 1st place, 5th place, 50th place, 100th place, etc., at many different races across many different years. If, for example, this year&rsquo;s London Marathon is very hot, you can see how much slower the 100th place finisher is compared with another year that had better conditions.</p>
             <p>Now, here&rsquo;s where the subtle bias is introduced: fitting such a model assumes that the runner who finished 100th this year is basically interchangeable with the runner who finished 100th last year. In hot conditions, though, you would expect that the person who finished 100th would be <em>more likely to be a runner who tolerates the heat well</em>, whereas in cool conditions, you would not expect a runner who tolerates heat to do any better or worse than average.</p>
             <p>So, if we are interested in the effects of hot weather on a <em>typical </em>runner, who is neither well-suited nor poorly suited for hot conditions, this equal-finish-place method could lead us to underestimate the effects of heat. I don&rsquo;t expect this to be a huge issue, but it&rsquo;s worth keeping in mind.</p>
             <p>This problem could be solved with a longitudinal dataset: tracking the <em>same </em>runners over several years, investigating how their performance changes in hot versus cool conditions. I&rsquo;m currently exploring options for building such a dataset.</p>
-            <h3>Details on the statistical model<a class="material-icons up" href="#top">arrow_upward</a></h3>
+            <h3>Details on the statistical model<a class="material-icons up" href="#top"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z"/></svg></a></h3>
             <p>One other note regarding the model: this app does <em>not </em>directly implement the equations that Mantzios et al. report in their paper—instead, I use their open-access data to fit a different statistical model to more directly account for some of the other sources of variation in marathon performance, such as the difficulty of different race courses and long-term secular changes in marathon performance.</p>
             <p>This app, plus the R code used to fit the model, are open-source on GitHub if you&rsquo;d like to check out how I fit the model in detail.</p>
-            <h2 id="calculator-settings">Calculator settings<a class="material-icons up" href="#top">arrow_upward</a></h2>
-            <p>This calculator will remember your pace, pace units, the pace-versus-effort switch, and your weather settings&mdash;input mode, temperature scale, and the temperature, humidity, dew point, and heat index values&mdash;in your browser&rsquo;s local storage. So, when you come back to the calculator later, you&rsquo;ll be able to pick up where you left off. You can reset all settings to their defaults using the <span class="material-icons inline-icon">history</span> button, or turn the memory off entirely with the &ldquo;Remember settings&rdquo; switch.</p>
-            <h2 id="get-updates">Support my work<a class="material-icons up" href="#top">arrow_upward</a></h2>
+            <h2 id="calculator-settings">Calculator settings<a class="material-icons up" href="#top"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z"/></svg></a></h2>
+            <p>This calculator will remember your pace, pace units, the pace-versus-effort switch, and your weather settings&mdash;input mode, temperature scale, and the temperature, humidity, dew point, and heat index values&mdash;in your browser&rsquo;s local storage. So, when you come back to the calculator later, you&rsquo;ll be able to pick up where you left off. You can reset all settings to their defaults using the <span class="material-icons inline-icon"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M480-120q-138 0-240.5-91.5T122-440h82q14 104 92.5 172T480-200q117 0 198.5-81.5T760-480q0-117-81.5-198.5T480-760q-69 0-129 32t-101 88h110v80H120v-240h80v94q51-64 124.5-99T480-840q75 0 140.5 28.5t114 77q48.5 48.5 77 114T840-480q0 75-28.5 140.5t-77 114q-48.5 48.5-114 77T480-120Zm112-192L440-464v-216h80v184l128 128-56 56Z"/></svg></span> button, or turn the memory off entirely with the &ldquo;Remember settings&rdquo; switch.</p>
+            <h2 id="get-updates">Support my work<a class="material-icons up" href="#top"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z"/></svg></a></h2>
             <p>If you want to find out when I have new apps and research coming out, sign up for my email list below! It's the best way to follow my work. I have several major projects coming out soon that you won't want to miss</p>
             <p>If you're training for the marathon, be sure to check out my new book, <strong><a href="https://amzn.to/43mIH2B" class="plausible-event-name=Body+Book+Click">Marathon Excellence for Everyone</a></strong>. It covers the modern approach to marathon training, including training plans, racing strategies, and the latest science on training.</p>
             <p>If you live outside of the United States, there is also a <strong><a href="https://amzn.to/3LzimIB" class="plausible-event-name=Body+Book+Click">Metric Edition of Marathon Excellence</a></strong> available, with all workouts and paces in kilometers!</p>
@@ -312,14 +311,14 @@
             <div class="newsletter-block">
                 <script async src="https://eomail6.com/form/187bb3d4-92e9-11ed-8dcb-9536633250ee.js" data-form="187bb3d4-92e9-11ed-8dcb-9536633250ee"></script>
             </div>
-            <h2 id="contact">Contact<a class="material-icons up" href="#top">arrow_upward</a></h2>
+            <h2 id="contact">Contact<a class="material-icons up" href="#top"><svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z"/></svg></a></h2>
             <p>If you've got feedback on this web app, or if you've found a bug, please reach out! You can reach me at <a href="mailto:john@runningwritings.com"><strong>john@runningwritings.com</strong></a>.</p>
             <p>I'm <a href="https://x.com/JDruns"><strong>also on X</strong></a>, but the best way to follow my work is my <a href="https://runningwritings.eo.page/news-and-notes-signup"><strong>email list</strong></a>!</p>
         </div>
     </main>
     <footer>
         Made by <a class="author-link" href="https://runningwritings.com">John Davis</a>
-        <a href="https://github.com/johnjdavisiv/heat-adjusted-pace" target="_blank"><i class="fa fa-github github-icon"></i></a>
+        <a href="https://github.com/johnjdavisiv/heat-adjusted-pace" target="_blank"><svg class="github-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
     </footer>
     <script async src="https://eomail6.com/form/1c0d1c8c-8b6f-11f0-af9a-af63b4293a21.js" data-form="1c0d1c8c-8b6f-11f0-af9a-af63b4293a21"></script>
 </body>
